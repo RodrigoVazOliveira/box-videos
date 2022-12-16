@@ -1,1 +1,18 @@
 rootProject.name = 'box-videos'
+
+include 'application'
+include 'application:core'
+findProject(':application:core')?.name = 'core'
+include 'application:portin'
+findProject(':application:portin')?.name = 'portin'
+include 'application:portout'
+findProject(':application:portout')?.name = 'portout'
+include 'adapters'
+include 'adapters:inbound'
+findProject(':adapters:inbound')?.name = 'inbound'
+include 'adapters:outbound'
+findProject(':adapters:outbound')?.name = 'outbound'
+include 'adapters:configurations'
+findProject(':adapters:configurations')?.name = 'configurations'
+include 'framework'
+
