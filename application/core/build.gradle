@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'rvz.dev'
+group 'dev.rvz'
 sourceCompatibility = '17'
 
 repositories {

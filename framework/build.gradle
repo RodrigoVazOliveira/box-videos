@@ -4,7 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group 'rvz.dev'
+group 'dev.rvz'
 sourceCompatibility = '17'
 
 repositories {
@@ -15,9 +15,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation project(':adapters')
+    implementation project(':adapters:configurations')
+    implementation project(':adapters:inbound')
+    implementation project(':adapters:outbound')
+    implementation project(':application:core')
+    implementation project(':application:portin')
+    implementation project(':application:portout')
     runtimeOnly 'com.h2database:h2'
-
 }
 
 tasks.named('test') {

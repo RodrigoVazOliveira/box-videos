@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'rvz.dev'
+group 'dev.rvz'
 sourceCompatibility = '17'
 
 repositories {
@@ -10,8 +10,4 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation project('core')
-    implementation project('portin')
-    implementation project('portout')
-}
+dependencies {}
