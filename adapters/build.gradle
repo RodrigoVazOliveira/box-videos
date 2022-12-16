@@ -7,10 +7,10 @@ plugins {
 }
 
 group 'rvz.dev'
-version '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -24,6 +24,7 @@ dependencies {
     implementation project('configurations')
     implementation project('inbound')
     implementation project('outbound')
+    implementation project(':application')
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

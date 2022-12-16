@@ -3,15 +3,15 @@ plugins {
 }
 
 group 'rvz.dev'
-version '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-}
-
-test {
-    useJUnitPlatform()
+    implementation project('core')
+    implementation project('portin')
+    implementation project('portout')
 }
