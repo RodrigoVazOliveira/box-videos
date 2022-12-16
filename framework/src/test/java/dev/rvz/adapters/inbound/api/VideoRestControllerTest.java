@@ -21,6 +21,9 @@ class VideoRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    VideoRestControllerTest() {
+    }
+
     @Test
     void test_create_video_with_success() {
         CreateVideoRequest createVideoRequest = new CreateVideoRequest(
