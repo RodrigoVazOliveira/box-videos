@@ -1,7 +1,5 @@
-rootProject.name = 'box-videos'
+rootProject.name = 'adapters'
 
-include 'application'
-include 'adapters'
 include 'adapters:inbound'
 findProject(':adapters:inbound')?.name = 'inbound'
 include 'adapters:outbound'
@@ -11,7 +9,3 @@ findProject(':adapters:configurations')?.name = 'configurations'
 include 'framework'
 include 'adapters:commons'
 findProject(':adapters:commons')?.name = 'commons'
-include 'core'
-include 'portin'
-include 'portout'
-

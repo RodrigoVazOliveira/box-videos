@@ -1,0 +1,8 @@
+-- Create Table videos
+CREATE TABLE IF NOT EXISTS videos (
+    id BIGSERIAL NOT NULL,
+    title VARCHAR(80) NOT NULL,
+    description VARCHAR(180) NOT NULL,
+    url VARCHAR(500) NOT NULL,
+    CONSTRAINT PK_VIDEOS PRIMARY KEY (id)
+);

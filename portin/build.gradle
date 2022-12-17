@@ -3,15 +3,11 @@ plugins {
 }
 
 group 'dev.rvz'
-sourceCompatibility = '17'
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    implementation project(':portin')
-    implementation project(':portout')
     implementation project(':core')
 }

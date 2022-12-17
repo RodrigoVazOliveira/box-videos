@@ -9,6 +9,7 @@ O projeto possui o objetivo de ser um micro serviço de acervo de vídeos.
    - Java 17
    - Flyway
    - PostGreSQL
+   - Arquitetura Hexagonal
 
 ## Configurações:
 
