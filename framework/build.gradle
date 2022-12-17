@@ -14,14 +14,18 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'com.h2database:h2'
+    implementation 'org.flywaydb:flyway-core'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation project(':adapters:configurations')
+    implementation project(':adapters:commons')
     implementation project(':adapters:inbound')
     implementation project(':adapters:outbound')
-    implementation project(':application:core')
-    implementation project(':application:portin')
-    implementation project(':application:portout')
-    runtimeOnly 'com.h2database:h2'
+    implementation project(':application')
+    implementation project(':core')
+    implementation project(':portin')
+    implementation project(':portout')
 }
 
 tasks.named('test') {

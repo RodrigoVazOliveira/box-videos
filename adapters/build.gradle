@@ -19,12 +19,3 @@ dependencyManagement {
         mavenBom SpringBootPlugin.BOM_COORDINATES
     }
 }
-
-dependencies {
-    implementation project(':application:core')
-    implementation project(':application:portin')
-    implementation project(':application:portout')
-    implementation 'org.flywaydb:flyway-core'
-    runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-}

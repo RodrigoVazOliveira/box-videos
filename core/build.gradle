@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+}
+
+group 'dev.rvz'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
