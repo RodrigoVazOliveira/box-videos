@@ -11,6 +11,7 @@ import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
+import dev.rvz.boxvideos.port.in.GetVideoByIdPortIn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
