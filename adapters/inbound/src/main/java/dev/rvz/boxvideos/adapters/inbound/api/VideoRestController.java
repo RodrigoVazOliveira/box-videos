@@ -1,11 +1,14 @@
 package dev.rvz.boxvideos.adapters.inbound.api;
 
 import dev.rvz.boxvideos.adapters.commons.mapper.CreateVideoRequestToVideoMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.VideoToCreateVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
+import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
+import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +26,21 @@ public class VideoRestController {
     private final CreateVideoPortIn createVideoPortIn;
     private final CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper;
     private final VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper;
+    private final GetAllVideosPortIn getAllVideosPortIn;
 
-    public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper) {
+    private final IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
+
+    public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper, GetAllVideosPortIn getAllVideosPortIn, IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper) {
         this.createVideoPortIn = createVideoPortIn;
         this.createVideoRequestToVideoMapper = createVideoRequestToVideoMapper;
         this.videoToCreateVideoResponseMapper = videoToCreateVideoResponseMapper;
+        this.getAllVideosPortIn = getAllVideosPortIn;
+        this.iterableVideoToIterableGetAllVideoResponseMapper = iterableVideoToIterableGetAllVideoResponseMapper;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreateVideoResponse> create(@RequestBody CreateVideoRequest createVideoRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
+    ResponseEntity<CreateVideoResponse> create(@RequestBody CreateVideoRequest createVideoRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
         LOGGER.info("create - createVideoRequest: {}", createVideoRequest);
         Video video = createVideoRequestToVideoMapper.to(createVideoRequest);
 
@@ -44,5 +52,16 @@ public class VideoRestController {
         LOGGER.info("create - Location: {}", url);
 
         return ResponseEntity.created(uri).body(videoToCreateVideoResponseMapper.to(videoCreated));
+    }
+
+    @GetMapping
+    ResponseEntity<Iterable<GetAllVideoResponse>> getAllVideos() {
+        LOGGER.info("getAllVideos");
+        Iterable<Video> allVideos = getAllVideosPortIn.execute();
+        LOGGER.info("getAllVideos - allVideos {}", allVideos);
+
+        Iterable<GetAllVideoResponse> getAllVideoResponses = iterableVideoToIterableGetAllVideoResponseMapper.to(allVideos);
+
+        return ResponseEntity.ok(getAllVideoResponses);
     }
 }

@@ -2,12 +2,15 @@ package dev.rvz.adapters.inbound.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.CreateVideoRequestToVideoMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.VideoToCreateVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
+import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
+import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.Arrays;
 
 @WebMvcTest
 @AutoConfigureMockMvc
@@ -34,11 +39,14 @@ class VideoRestControllerTest {
     @MockBean
     private VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper;
 
+    @MockBean
+    private GetAllVideosPortIn getAllVideosPortIn;
+
+    @MockBean
+    private IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
+
     @Autowired
     private MockMvc mockMvc;
-
-    VideoRestControllerTest() {
-    }
 
     @Test
     void test_create_video_with_success() throws Exception {
@@ -74,5 +82,34 @@ class VideoRestControllerTest {
                 MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1")
         );
 
+    }
+
+
+    @Test
+    void test_get_all_videos() throws Exception {
+        Iterable<Video> videos = Arrays.asList(
+                new Video(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"),
+                new Video(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"),
+                new Video(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br")
+        );
+
+        Iterable<GetAllVideoResponse> allVideos = Arrays.asList(
+                new GetAllVideoResponse(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"),
+                new GetAllVideoResponse(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"),
+                new GetAllVideoResponse(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br")
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String expectResponse = objectMapper.writeValueAsString(allVideos);
+        Mockito.when(getAllVideosPortIn.execute()).thenReturn(videos);
+        Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any()))
+                        .thenReturn(allVideos);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(expectResponse)
+                );
     }
 }
