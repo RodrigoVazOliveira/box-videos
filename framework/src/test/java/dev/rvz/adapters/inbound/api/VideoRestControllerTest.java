@@ -45,6 +45,14 @@ class VideoRestControllerTest {
     @MockBean
     private IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
 
+    @MockBean
+    private GetVideoByIdPortIn getVideoByIdPortIn;
+
+
+    @MockBean
+    private VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
+
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -103,13 +111,32 @@ class VideoRestControllerTest {
         String expectResponse = objectMapper.writeValueAsString(allVideos);
         Mockito.when(getAllVideosPortIn.execute()).thenReturn(videos);
         Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any()))
-                        .thenReturn(allVideos);
+                .thenReturn(allVideos);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/videos"))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(expectResponse)
+                );
+    }
+
+    @Test
+    void test_get_video_by_id_with_success_handred_two_ok() throws Exception {
+        Video video = new Video(1L, "", "", "");
+        GetVideoResponse getVideoResponse = new GetVideoResponse(1L, "", "", "");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(getVideoResponse);
+
+        Mockito.when(VideoToGetVideoResponseMapper.execute(Mockito.anyString())).thenReturn(video);
+        Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenReturn(getVideoResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
                 );
     }
 }
