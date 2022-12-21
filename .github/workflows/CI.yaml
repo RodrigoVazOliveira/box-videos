@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'adopt'
+      - name: build application
+        run: ./gradlew build
+      - name: execute tests untis
+        run: ./gradlew test
