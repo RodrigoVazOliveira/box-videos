@@ -9,7 +9,10 @@ import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
+import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
 import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
+import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
+import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
@@ -30,7 +33,7 @@ import java.util.Arrays;
 
 @WebMvcTest
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = VideoRestController.class)
+@ContextConfiguration(classes = {VideoRestController.class, ExceptionHandlerDefaultRest.class})
 class VideoRestControllerTest {
 
     @MockBean
@@ -54,7 +57,6 @@ class VideoRestControllerTest {
 
     @MockBean
     private VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -138,6 +140,24 @@ class VideoRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
+                );
+    }
+
+    @Test
+    void test_get_video_by_id_with_not_found_resource() throws Exception {
+        ResponseException responseException = new ResponseException(404, "Não existe vídeo com id 1");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(responseException);
+
+        Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenThrow(
+                new VideoNotFoundException("Não existe vídeo com id 1")
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(response)
                 );

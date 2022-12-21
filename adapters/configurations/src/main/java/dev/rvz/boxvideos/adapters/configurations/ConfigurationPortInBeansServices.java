@@ -3,13 +3,15 @@ package dev.rvz.boxvideos.adapters.configurations;
 
 import dev.rvz.boxvideos.application.video.service.CreateVideoService;
 import dev.rvz.boxvideos.application.video.service.GetAllVideoService;
+import dev.rvz.boxvideos.application.video.service.GetVideoByIdService;
 import dev.rvz.boxvideos.port.out.CreateVideoPortout;
 import dev.rvz.boxvideos.port.out.GetAllVideosPortOut;
+import dev.rvz.boxvideos.port.out.GetVideoByIdPortOut;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ConfigurationPortInBeansServices {
+class ConfigurationPortInBeansServices {
 
     @Bean
     CreateVideoService createVideoServiceBean(CreateVideoPortout createVideoPortout) {
@@ -19,5 +21,10 @@ public class ConfigurationPortInBeansServices {
     @Bean
     GetAllVideoService getAllVideoServiceBean(GetAllVideosPortOut getAllVideosPortOut) {
         return new GetAllVideoService(getAllVideosPortOut);
+    }
+
+    @Bean
+    GetVideoByIdService getVideoByIdService(GetVideoByIdPortOut getVideoByIdPortOut) {
+        return new GetVideoByIdService(getVideoByIdPortOut);
     }
 }

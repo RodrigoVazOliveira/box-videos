@@ -3,12 +3,15 @@ package dev.rvz.boxvideos.adapters.inbound.api;
 import dev.rvz.boxvideos.adapters.commons.mapper.CreateVideoRequestToVideoMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.VideoToCreateVideoResponseMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.VideoToGetVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
+import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
+import dev.rvz.boxvideos.port.in.GetVideoByIdPortIn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +30,18 @@ public class VideoRestController {
     private final CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper;
     private final VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper;
     private final GetAllVideosPortIn getAllVideosPortIn;
-
     private final IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
+    private final GetVideoByIdPortIn getVideoByIdPortIn;
+    private final VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
 
-    public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper, GetAllVideosPortIn getAllVideosPortIn, IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper) {
+    public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper, GetAllVideosPortIn getAllVideosPortIn, IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper, GetVideoByIdPortIn getVideoByIdPortIn, VideoToGetVideoResponseMapper getVideoResponseMapper) {
         this.createVideoPortIn = createVideoPortIn;
         this.createVideoRequestToVideoMapper = createVideoRequestToVideoMapper;
         this.videoToCreateVideoResponseMapper = videoToCreateVideoResponseMapper;
         this.getAllVideosPortIn = getAllVideosPortIn;
         this.iterableVideoToIterableGetAllVideoResponseMapper = iterableVideoToIterableGetAllVideoResponseMapper;
+        this.getVideoByIdPortIn = getVideoByIdPortIn;
+        this.videoToGetVideoResponseMapper = getVideoResponseMapper;
     }
 
     @PostMapping
@@ -63,5 +69,13 @@ public class VideoRestController {
         Iterable<GetAllVideoResponse> getAllVideoResponses = iterableVideoToIterableGetAllVideoResponseMapper.to(allVideos);
 
         return ResponseEntity.ok(getAllVideoResponses);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<GetVideoResponse> getVideoById(@PathVariable Long id) {
+        LOGGER.info("getVideoById - id {}", id);
+        Video video = getVideoByIdPortIn.execute(id);
+
+        return ResponseEntity.ok(videoToGetVideoResponseMapper.to(video));
     }
 }
