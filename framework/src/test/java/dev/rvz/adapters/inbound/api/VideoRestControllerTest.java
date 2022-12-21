@@ -4,13 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.CreateVideoRequestToVideoMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.VideoToCreateVideoResponseMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.VideoToGetVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
+import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
+import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
 import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
+import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
+import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
+import dev.rvz.boxvideos.port.in.GetVideoByIdPortIn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +33,7 @@ import java.util.Arrays;
 
 @WebMvcTest
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = VideoRestController.class)
+@ContextConfiguration(classes = {VideoRestController.class, ExceptionHandlerDefaultRest.class})
 class VideoRestControllerTest {
 
     @MockBean
@@ -44,6 +50,13 @@ class VideoRestControllerTest {
 
     @MockBean
     private IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
+
+    @MockBean
+    private GetVideoByIdPortIn getVideoByIdPortIn;
+
+
+    @MockBean
+    private VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -103,13 +116,50 @@ class VideoRestControllerTest {
         String expectResponse = objectMapper.writeValueAsString(allVideos);
         Mockito.when(getAllVideosPortIn.execute()).thenReturn(videos);
         Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any()))
-                        .thenReturn(allVideos);
+                .thenReturn(allVideos);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/videos"))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(expectResponse)
+                );
+    }
+
+    @Test
+    void test_get_video_by_id_with_success_handred_two_ok() throws Exception {
+        Video video = new Video(1L, "", "", "");
+        GetVideoResponse getVideoResponse = new GetVideoResponse(1L, "", "", "");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(getVideoResponse);
+
+        Mockito.when(getVideoByIdPortIn.execute(Mockito.any())).thenReturn(video);
+        Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenReturn(getVideoResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
+                );
+    }
+
+    @Test
+    void test_get_video_by_id_with_not_found_resource() throws Exception {
+        ResponseException responseException = new ResponseException(404, "Não existe vídeo com id 1");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(responseException);
+
+        Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenThrow(
+                new VideoNotFoundException("Não existe vídeo com id 1")
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNotFound()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
                 );
     }
 }

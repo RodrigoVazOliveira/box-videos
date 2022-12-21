@@ -27,6 +27,7 @@ public class CreateVideoAdapter implements CreateVideoPortout {
     public Video execute(Video video) {
         VideoEntity videoEntity = videoToVideoEntityMapper.to(video);
         videoRepository.save(videoEntity);
+        LOGGER.info("execute - videoEntity {}", videoEntity);
 
         return videoEntityToVideoMapper.to(videoEntity);
     }
