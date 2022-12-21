@@ -1,14 +1,13 @@
 package dev.rvz.adapters.inbound.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.CreateVideoRequestToVideoMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.VideoToCreateVideoResponseMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.VideoToGetVideoResponseMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.*;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
+import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
+import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
 import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
@@ -17,6 +16,7 @@ import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
 import dev.rvz.boxvideos.port.in.GetVideoByIdPortIn;
+import dev.rvz.boxvideos.port.in.UpdateCompleteVideoPortIn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +57,15 @@ class VideoRestControllerTest {
 
     @MockBean
     private VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
+
+    @MockBean
+    private UpdateCompleteVideoPortIn updateCompleteVideoPortIn;
+
+    @MockBean
+    private UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper;
+
+    @MockBean
+    private VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -160,6 +169,57 @@ class VideoRestControllerTest {
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(response)
+                );
+    }
+
+    @Test
+    void test_update_complete_not_exists_videos_response_handred_two_one() throws Exception {
+        UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost");
+        UpdateCompleteVideoResponse updateCompleteVideoResponse = new UpdateCompleteVideoResponse(1L, "Filme 1", "Fileme descriacao", "http://localhost");
+        Video video = new Video(1L, "Filme 1", "Fileme descriacao", "http://localhost");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String updateRequest = objectMapper.writeValueAsString(updateCompleteVideoRequest);
+        String response = objectMapper.writeValueAsString(updateCompleteVideoResponse);
+
+
+        Mockito.when(updateCompleteVideoPortIn.execute(Mockito.any())).thenReturn(video);
+        Mockito.when(updateCompleteVideoRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
+        Mockito.when(updateCompleteVideoPortIn.videoExists(Mockito.any())).thenReturn(false);
+        Mockito.when(videoToUpdateCompleteVideoResponseMapper.to(Mockito.any())).thenReturn(updateCompleteVideoResponse);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequest))
+                .andExpect(
+                        MockMvcResultMatchers.status().isCreated()
+                ).andExpect(
+                        MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1")
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
+                );
+    }
+
+    @Test
+    void test_update_complete_exists_videos_response_handred_two_four() throws Exception {
+        UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost");
+        Video video = new Video(1L, "Filme 1", "Fileme descriacao", "http://localhost");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String updateRequest = objectMapper.writeValueAsString(updateCompleteVideoRequest);
+
+
+        Mockito.when(updateCompleteVideoPortIn.execute(Mockito.any())).thenReturn(video);
+        Mockito.when(updateCompleteVideoRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
+        Mockito.when(updateCompleteVideoPortIn.videoExists(Mockito.any())).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequest))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNoContent()
+                ).andExpect(
+                        MockMvcResultMatchers.header().string("Content-Location", "http://localhost/videos/1")
                 );
     }
 }
