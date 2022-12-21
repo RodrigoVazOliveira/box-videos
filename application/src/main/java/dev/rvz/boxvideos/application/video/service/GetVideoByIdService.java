@@ -13,8 +13,6 @@ public class GetVideoByIdService implements GetVideoByIdPortIn {
 
     @Override
     public Video execute(Long id) {
-        Video video = getVideoByIdPortOut.execute(id);
-
-        return video;
+        return getVideoByIdPortOut.execute(id);
     }
 }
