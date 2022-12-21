@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.CreateVideoRequestToVideoMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.VideoToCreateVideoResponseMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.VideoToGetVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
+import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
@@ -130,7 +132,7 @@ class VideoRestControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(getVideoResponse);
 
-        Mockito.when(VideoToGetVideoResponseMapper.execute(Mockito.anyString())).thenReturn(video);
+        Mockito.when(getVideoByIdPortIn.execute(Mockito.any())).thenReturn(video);
         Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenReturn(getVideoResponse);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
