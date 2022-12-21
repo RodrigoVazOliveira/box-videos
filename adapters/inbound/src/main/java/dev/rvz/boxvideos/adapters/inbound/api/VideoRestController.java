@@ -35,7 +35,7 @@ public class VideoRestController {
     private final VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
     private final UpdateCompleteVideoPortIn updateCompleteVideoPortIn;
     private final UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper;
-    private final VideoToUpdateCompleteVideoResponseMapper updateCompleteVideoResponseMapper;
+    private final VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper;
 
     public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper, GetAllVideosPortIn getAllVideosPortIn, IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper, GetVideoByIdPortIn getVideoByIdPortIn, VideoToGetVideoResponseMapper videoToGetVideoResponseMapper, UpdateCompleteVideoPortIn updateCompleteVideoPortIn, UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper, VideoToUpdateCompleteVideoResponseMapper updateCompleteVideoResponseMapper) {
         this.createVideoPortIn = createVideoPortIn;
@@ -47,7 +47,7 @@ public class VideoRestController {
         this.videoToGetVideoResponseMapper = videoToGetVideoResponseMapper;
         this.updateCompleteVideoPortIn = updateCompleteVideoPortIn;
         this.updateCompleteVideoRequestToVideoMapper = updateCompleteVideoRequestToVideoMapper;
-        this.updateCompleteVideoResponseMapper = updateCompleteVideoResponseMapper;
+        this.videoToUpdateCompleteVideoResponseMapper = updateCompleteVideoResponseMapper;
     }
 
     @PostMapping
@@ -103,7 +103,7 @@ public class VideoRestController {
 
         return ResponseEntity
                 .created(uri)
-                .body(updateCompleteVideoResponseMapper.to(videoProcessed));
+                .body(videoToUpdateCompleteVideoResponseMapper.to(videoProcessed));
     }
 
     private URI getUri(HttpServletRequest httpServletRequest, Long id) throws URISyntaxException {
