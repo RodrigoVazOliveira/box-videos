@@ -1,5 +1,6 @@
 package dev.rvz.boxvideos.application.video.service;
 
+import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.out.GetVideoByIdPortOut;
 import org.junit.jupiter.api.Assertions;
@@ -22,10 +23,22 @@ class GetVideoByIdServiceTest {
     @Test
     void test_get_video_by_id_with_success() {
         Video video = new Video(1L, "", "", "");
+        Mockito.when(getVideoByIdPortOut.notExistsVideoById(Mockito.any())).thenReturn(false);
         Mockito.when(getVideoByIdPortOut.execute(Mockito.any())).thenReturn(video);
 
         Video result = getVideoByIdService.execute(1L);
 
         Assertions.assertEquals(video, result);
+    }
+
+    @Test
+    void test_get_video_by_id_without_success() {
+        Mockito.when(getVideoByIdPortOut.notExistsVideoById(Mockito.any())).thenReturn(true);
+
+        VideoNotFoundException resultException = Assertions.assertThrows(VideoNotFoundException.class, () -> {
+            getVideoByIdService.execute(1L);
+        });
+
+        Assertions.assertEquals("Não existe vídeo com id 1", resultException.getMessage());
     }
 }
