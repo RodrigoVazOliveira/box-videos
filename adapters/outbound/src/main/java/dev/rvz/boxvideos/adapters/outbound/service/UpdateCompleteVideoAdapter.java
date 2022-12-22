@@ -36,7 +36,7 @@ public class UpdateCompleteVideoAdapter implements UpdateCompleteVideoPortOut {
         videoEntity.setUrl(video.url());
         videoRepository.save(videoEntity);
 
-        return videoEntityToVideoMapper.to(videoEntity);
+                return videoEntityToVideoMapper.to(videoEntity);
     }
 
     @Override
