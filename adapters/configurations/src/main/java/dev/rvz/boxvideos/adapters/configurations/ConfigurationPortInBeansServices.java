@@ -1,14 +1,8 @@
 package dev.rvz.boxvideos.adapters.configurations;
 
 
-import dev.rvz.boxvideos.application.video.service.CreateVideoService;
-import dev.rvz.boxvideos.application.video.service.GetAllVideoService;
-import dev.rvz.boxvideos.application.video.service.GetVideoByIdService;
-import dev.rvz.boxvideos.application.video.service.UpdateCompleteVideoService;
-import dev.rvz.boxvideos.port.out.CreateVideoPortout;
-import dev.rvz.boxvideos.port.out.GetAllVideosPortOut;
-import dev.rvz.boxvideos.port.out.GetVideoByIdPortOut;
-import dev.rvz.boxvideos.port.out.UpdateCompleteVideoPortOut;
+import dev.rvz.boxvideos.application.video.service.*;
+import dev.rvz.boxvideos.port.out.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,5 +27,10 @@ class ConfigurationPortInBeansServices {
     @Bean
     UpdateCompleteVideoService updateCompleteVideoService(UpdateCompleteVideoPortOut updateCompleteVideoPortOut) {
         return new UpdateCompleteVideoService(updateCompleteVideoPortOut);
+    }
+
+    @Bean
+    UpdatePartialVideoService updatePartialVideoService(UpdatePartialVideoPortOut updatePartialVideoPortOut) {
+        return new UpdatePartialVideoService(updatePartialVideoPortOut);
     }
 }

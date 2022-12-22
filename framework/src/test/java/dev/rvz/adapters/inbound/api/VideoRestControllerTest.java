@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.*;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
+import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdatePartialRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
@@ -13,10 +14,7 @@ import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
-import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
-import dev.rvz.boxvideos.port.in.GetVideoByIdPortIn;
-import dev.rvz.boxvideos.port.in.UpdateCompleteVideoPortIn;
+import dev.rvz.boxvideos.port.in.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,23 +65,20 @@ class VideoRestControllerTest {
     @MockBean
     private VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper;
 
+    @MockBean
+    private UpdatePartialVideoPortIn updatePartialVideoPortIn;
+
+    @MockBean
+    private UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper;
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void test_create_video_with_success() throws Exception {
-        CreateVideoRequest createVideoRequest = new CreateVideoRequest(
-                "Video Test1",
-                "Descrição teste",
-                "http://wwww.google.com.br"
-        );
+        CreateVideoRequest createVideoRequest = new CreateVideoRequest("Video Test1", "Descrição teste", "http://wwww.google.com.br");
 
-        CreateVideoResponse createVideoResponse = new CreateVideoResponse(
-                1L,
-                "Video Test1",
-                "Descrição teste",
-                "http://wwww.google.com.br"
-        );
+        CreateVideoResponse createVideoResponse = new CreateVideoResponse(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(createVideoRequest);
@@ -92,47 +87,22 @@ class VideoRestControllerTest {
         Video video = new Video(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br");
         Mockito.when(createVideoPortIn.execute(Mockito.any())).thenReturn(video);
         Mockito.when(videoToCreateVideoResponseMapper.to(Mockito.any())).thenReturn(createVideoResponse);
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/videos")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(jsonRequest)
-        ).andExpect(
-                MockMvcResultMatchers.status().isCreated()
-        ).andExpect(
-                MockMvcResultMatchers.content().json(responseJson)
-        ).andExpect(
-                MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1")
-        );
-
+        mockMvc.perform(MockMvcRequestBuilders.post("/videos").contentType(MediaType.APPLICATION_JSON_VALUE).content(jsonRequest)).andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.content().json(responseJson)).andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1"));
     }
 
 
     @Test
     void test_get_all_videos() throws Exception {
-        Iterable<Video> videos = Arrays.asList(
-                new Video(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"),
-                new Video(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"),
-                new Video(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br")
-        );
+        Iterable<Video> videos = Arrays.asList(new Video(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"), new Video(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"), new Video(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br"));
 
-        Iterable<GetAllVideoResponse> allVideos = Arrays.asList(
-                new GetAllVideoResponse(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"),
-                new GetAllVideoResponse(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"),
-                new GetAllVideoResponse(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br")
-        );
+        Iterable<GetAllVideoResponse> allVideos = Arrays.asList(new GetAllVideoResponse(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"), new GetAllVideoResponse(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"), new GetAllVideoResponse(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br"));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String expectResponse = objectMapper.writeValueAsString(allVideos);
         Mockito.when(getAllVideosPortIn.execute()).thenReturn(videos);
-        Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any()))
-                .thenReturn(allVideos);
+        Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any())).thenReturn(allVideos);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/videos"))
-                .andExpect(
-                        MockMvcResultMatchers.status().isOk()
-                ).andExpect(
-                        MockMvcResultMatchers.content().json(expectResponse)
-                );
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().json(expectResponse));
     }
 
     @Test
@@ -146,12 +116,7 @@ class VideoRestControllerTest {
         Mockito.when(getVideoByIdPortIn.execute(Mockito.any())).thenReturn(video);
         Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenReturn(getVideoResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
-                .andExpect(
-                        MockMvcResultMatchers.status().isOk()
-                ).andExpect(
-                        MockMvcResultMatchers.content().json(response)
-                );
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -160,16 +125,9 @@ class VideoRestControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String response = objectMapper.writeValueAsString(responseException);
 
-        Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenThrow(
-                new VideoNotFoundException("Não existe vídeo com id 1")
-        );
+        Mockito.when(videoToGetVideoResponseMapper.to(Mockito.any())).thenThrow(new VideoNotFoundException("Não existe vídeo com id 1"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1"))
-                .andExpect(
-                        MockMvcResultMatchers.status().isNotFound()
-                ).andExpect(
-                        MockMvcResultMatchers.content().json(response)
-                );
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/1")).andExpect(MockMvcResultMatchers.status().isNotFound()).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -188,16 +146,7 @@ class VideoRestControllerTest {
         Mockito.when(updateCompleteVideoPortIn.videoExists(Mockito.any())).thenReturn(false);
         Mockito.when(videoToUpdateCompleteVideoResponseMapper.to(Mockito.any())).thenReturn(updateCompleteVideoResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequest))
-                .andExpect(
-                        MockMvcResultMatchers.status().isCreated()
-                ).andExpect(
-                        MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1")
-                ).andExpect(
-                        MockMvcResultMatchers.content().json(response)
-                );
+        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1").contentType(MediaType.APPLICATION_JSON).content(updateRequest)).andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1")).andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -213,13 +162,41 @@ class VideoRestControllerTest {
         Mockito.when(updateCompleteVideoRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updateCompleteVideoPortIn.videoExists(Mockito.any())).thenReturn(true);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1").contentType(MediaType.APPLICATION_JSON).content(updateRequest)).andExpect(MockMvcResultMatchers.status().isNoContent()).andExpect(MockMvcResultMatchers.header().string("Content-Location", "http://localhost/videos/1"));
+    }
+
+    @Test
+    void test_update_partial_with_sucess() throws Exception {
+        Video video = new Video(1L, "Title1", "Descricao1", "http://localhost");
+        UpdatePartialRequest updatePartialRequest = new UpdatePartialRequest("Title1", "Descricao1", "http://localhost");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(updatePartialRequest);
+        Mockito.when(updatePartialRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
+        Mockito.when(updatePartialVideoPortIn.updateVideoAlreadyExists(Mockito.any())).thenReturn(video);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/videos/1").contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(MockMvcResultMatchers.status().isNoContent()).andExpect(MockMvcResultMatchers.header().string("Content-Location", "http://localhost/videos/1"));
+    }
+
+    @Test
+    void test_update_partial_response_video_not_found() throws Exception {
+        ResponseException responseException = new ResponseException(404, "Não existe vídeo com id 1");
+        Video video = new Video(1L, "Title1", "Descricao1", "http://localhost");
+        UpdatePartialRequest updatePartialRequest = new UpdatePartialRequest("Title1", "Descricao1", "http://localhost");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String request = objectMapper.writeValueAsString(updatePartialRequest);
+        String response = objectMapper.writeValueAsString(responseException);
+        Mockito.when(updatePartialRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
+        Mockito.when(updatePartialVideoPortIn.updateVideoAlreadyExists(Mockito.any())).thenThrow(
+              new VideoNotFoundException("Não existe vídeo com id 1")
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/videos/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequest))
+                        .content(request))
                 .andExpect(
-                        MockMvcResultMatchers.status().isNoContent()
+                        MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
-                        MockMvcResultMatchers.header().string("Content-Location", "http://localhost/videos/1")
+                        MockMvcResultMatchers.content().json(response)
                 );
     }
 }
