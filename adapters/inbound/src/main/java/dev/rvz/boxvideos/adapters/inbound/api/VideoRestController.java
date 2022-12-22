@@ -3,15 +3,13 @@ package dev.rvz.boxvideos.adapters.inbound.api;
 import dev.rvz.boxvideos.adapters.commons.mapper.*;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
+import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdatePartialRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.CreateVideoPortIn;
-import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
-import dev.rvz.boxvideos.port.in.GetVideoByIdPortIn;
-import dev.rvz.boxvideos.port.in.UpdateCompleteVideoPortIn;
+import dev.rvz.boxvideos.port.in.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,11 @@ public class VideoRestController {
     private final UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper;
     private final VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper;
 
-    public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper, GetAllVideosPortIn getAllVideosPortIn, IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper, GetVideoByIdPortIn getVideoByIdPortIn, VideoToGetVideoResponseMapper videoToGetVideoResponseMapper, UpdateCompleteVideoPortIn updateCompleteVideoPortIn, UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper, VideoToUpdateCompleteVideoResponseMapper updateCompleteVideoResponseMapper) {
+    private final UpdatePartialVideoPortIn  updatePartialVideoPortIn;
+
+    private final UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper;
+
+    public VideoRestController(CreateVideoPortIn createVideoPortIn, CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper, VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper, GetAllVideosPortIn getAllVideosPortIn, IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper, GetVideoByIdPortIn getVideoByIdPortIn, VideoToGetVideoResponseMapper videoToGetVideoResponseMapper, UpdateCompleteVideoPortIn updateCompleteVideoPortIn, UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper, VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper, UpdatePartialVideoPortIn updatePartialVideoPortIn, UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper) {
         this.createVideoPortIn = createVideoPortIn;
         this.createVideoRequestToVideoMapper = createVideoRequestToVideoMapper;
         this.videoToCreateVideoResponseMapper = videoToCreateVideoResponseMapper;
@@ -47,7 +49,9 @@ public class VideoRestController {
         this.videoToGetVideoResponseMapper = videoToGetVideoResponseMapper;
         this.updateCompleteVideoPortIn = updateCompleteVideoPortIn;
         this.updateCompleteVideoRequestToVideoMapper = updateCompleteVideoRequestToVideoMapper;
-        this.videoToUpdateCompleteVideoResponseMapper = updateCompleteVideoResponseMapper;
+        this.videoToUpdateCompleteVideoResponseMapper = videoToUpdateCompleteVideoResponseMapper;
+        this.updatePartialVideoPortIn = updatePartialVideoPortIn;
+        this.updatePartialRequestToVideoMapper = updatePartialRequestToVideoMapper;
     }
 
     @PostMapping
@@ -90,9 +94,7 @@ public class VideoRestController {
         Boolean videoExists = updateCompleteVideoPortIn.videoExists(id);
         Video videoProcessed = updateCompleteVideoPortIn.execute(video);
 
-        String url = httpServletRequest.getRequestURL().toString();
-        URI uri = new URI(url);
-        LOGGER.info("getUri - Location: {}", url);
+        URI uri = getUriWithoutId(httpServletRequest);
 
         if (videoExists) {
             return ResponseEntity
@@ -106,8 +108,30 @@ public class VideoRestController {
                 .body(videoToUpdateCompleteVideoResponseMapper.to(videoProcessed));
     }
 
+    @PatchMapping("/{id}")
+    ResponseEntity<?> updatePartial(@PathVariable Long id, @RequestBody UpdatePartialRequest updatePartialRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
+        LOGGER.info("updatePartial - id {}, updatePartialRequest {}", id, updatePartialRequest);
+        Video video = updatePartialRequestToVideoMapper.to(updatePartialRequest, id);
+        updatePartialVideoPortIn.updateVideoAlreadyExists(video);
+        URI uri = getUriWithoutId(httpServletRequest);
+
+
+        return ResponseEntity
+                .noContent()
+                .header("Content-Location", uri.toString())
+                .build();
+    }
+
     private URI getUri(HttpServletRequest httpServletRequest, Long id) throws URISyntaxException {
         String url = httpServletRequest.getRequestURL().toString() + "/%s".formatted(id);
+        URI uri = new URI(url);
+        LOGGER.info("getUri - Location: {}", url);
+
+        return uri;
+    }
+
+    private URI getUriWithoutId(HttpServletRequest httpServletRequest) throws URISyntaxException {
+        String url = httpServletRequest.getRequestURL().toString();
         URI uri = new URI(url);
         LOGGER.info("getUri - Location: {}", url);
 
