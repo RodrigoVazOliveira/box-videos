@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.0.0'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'jacoco'
+    id 'jacoco-report-aggregation'
 }
 
 group 'dev.rvz'
@@ -42,6 +43,10 @@ test {
     finalizedBy(jacocoTestReport)
 }
 
+tasks.named('check') {
+    dependsOn(tasks.named('testCodeCoverageReport', JacocoReport))
+}
+
 jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
+    dependsOn test
 }
