@@ -37,7 +37,8 @@ import java.util.Arrays;
         GetAllVideoRestController.class,
         GetVideoByIdRestController.class,
         UpdateCompleteVideoRestController.class,
-        UpdatePartialVideoRestController.class
+        UpdatePartialVideoRestController.class,
+        DeleteVideoByIdRestController.class
 })
 class VideoRestControllerTest {
 
@@ -77,6 +78,9 @@ class VideoRestControllerTest {
 
     @MockBean
     private UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper;
+
+    @MockBean
+    private DeleteVideoByIdPortIn deleteVideoByIdPortIn;
 
     @Autowired
     private MockMvc mockMvc;
@@ -200,6 +204,29 @@ class VideoRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/videos/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNotFound()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
+                );
+    }
+
+    @Test
+    void test_delete_video_by_id_with_success() throws Exception {
+        Mockito.doNothing().when(deleteVideoByIdPortIn).run(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/videos/1"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNoContent()
+                );
+    }
+
+    @Test
+    void test_delete_video_by_id_with_not_found() throws Exception {
+        ResponseException responseException = new ResponseException(404, "Não existe vídeo com id 1");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(responseException);
+        Mockito.doThrow(new VideoNotFoundException("Não existe vídeo com id 1")).when(deleteVideoByIdPortIn).run(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/videos/1"))
                 .andExpect(
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
