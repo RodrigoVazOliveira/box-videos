@@ -10,8 +10,8 @@ class ValidationStringIsEmpty implements ValidationString {
 
     @Override
     public Boolean verify(String value) {
-        if (value.isEmpty()) return true;
-        if (validationStringNext == null) return false;
+        if (value.isEmpty()) return false;
+        if (validationStringNext == null) return true;
 
         return this.validationStringNext.verify(value);
     }

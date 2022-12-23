@@ -10,7 +10,7 @@ import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
-import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
+import dev.rvz.boxvideos.adapters.inbound.api.*;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
@@ -31,7 +31,15 @@ import java.util.Arrays;
 
 @WebMvcTest
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = {VideoRestController.class, ExceptionHandlerDefaultRest.class})
+@ContextConfiguration(classes = {
+        ExceptionHandlerDefaultRest.class,
+        CreateVideoController.class,
+        GetAllVideoRestController.class,
+        GetVideoByIdRestController.class,
+        UpdateCompleteVideoRestController.class,
+        UpdatePartialVideoRestController.class,
+        DeleteVideoByIdRestController.class
+})
 class VideoRestControllerTest {
 
     @MockBean
@@ -70,6 +78,9 @@ class VideoRestControllerTest {
 
     @MockBean
     private UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper;
+
+    @MockBean
+    private DeleteVideoByIdPortIn deleteVideoByIdPortIn;
 
     @Autowired
     private MockMvc mockMvc;
@@ -187,12 +198,35 @@ class VideoRestControllerTest {
         String response = objectMapper.writeValueAsString(responseException);
         Mockito.when(updatePartialRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updatePartialVideoPortIn.updateVideoAlreadyExists(Mockito.any())).thenThrow(
-              new VideoNotFoundException("Não existe vídeo com id 1")
+                new VideoNotFoundException("Não existe vídeo com id 1")
         );
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/videos/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNotFound()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
+                );
+    }
+
+    @Test
+    void test_delete_video_by_id_with_success() throws Exception {
+        Mockito.doNothing().when(deleteVideoByIdPortIn).run(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/videos/1"))
+                .andExpect(
+                        MockMvcResultMatchers.status().isNoContent()
+                );
+    }
+
+    @Test
+    void test_delete_video_by_id_with_not_found() throws Exception {
+        ResponseException responseException = new ResponseException(404, "Não existe vídeo com id 1");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String response = objectMapper.writeValueAsString(responseException);
+        Mockito.doThrow(new VideoNotFoundException("Não existe vídeo com id 1")).when(deleteVideoByIdPortIn).run(Mockito.any());
+        mockMvc.perform(MockMvcRequestBuilders.delete("/videos/1"))
                 .andExpect(
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(

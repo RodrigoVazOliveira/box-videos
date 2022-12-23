@@ -33,4 +33,9 @@ class ConfigurationPortInBeansServices {
     UpdatePartialVideoService updatePartialVideoService(UpdatePartialVideoPortOut updatePartialVideoPortOut) {
         return new UpdatePartialVideoService(updatePartialVideoPortOut);
     }
+
+    @Bean
+    DeleteVideoByIdService deleteVideoByIdService(DeleteVideoByIdPortOut deleteVideoByIdPortOut) {
+        return new DeleteVideoByIdService(deleteVideoByIdPortOut);
+    }
 }

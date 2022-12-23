@@ -1,50 +1,36 @@
 package dev.rvz.boxvideos.adapters.outbound.service;
 
-import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
-import dev.rvz.boxvideos.adapters.commons.mapper.VideoEntityToVideoMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.VideoToVideoEntityMapper;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
+import dev.rvz.boxvideos.port.out.CreateVideoPortout;
 import dev.rvz.boxvideos.port.out.UpdateCompleteVideoPortOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UpdateCompleteVideoAdapter implements UpdateCompleteVideoPortOut {
     private final Logger LOGGER = LoggerFactory.getLogger(UpdateCompleteVideoAdapter.class);
     private final VideoRepository videoRepository;
-    private final VideoToVideoEntityMapper videoToVideoEntityMapper;
-    private final VideoEntityToVideoMapper videoEntityToVideoMapper;
+    private final CreateVideoPortout createVideoPortout;
 
-    public UpdateCompleteVideoAdapter(VideoRepository videoRepository, VideoToVideoEntityMapper videoToVideoEntityMapper, VideoEntityToVideoMapper videoEntityToVideoMapper) {
+    public UpdateCompleteVideoAdapter(VideoRepository videoRepository, CreateVideoPortout createVideoPortout) {
         this.videoRepository = videoRepository;
-        this.videoToVideoEntityMapper = videoToVideoEntityMapper;
-        this.videoEntityToVideoMapper = videoEntityToVideoMapper;
+        this.createVideoPortout = createVideoPortout;
     }
 
     @Override
     public Video updateAlreadyExists(Video video) {
         LOGGER.info("updateAlreadyExists - video {}", video);
-        Optional<VideoEntity> optionalVideoEntity = videoRepository.findById(video.id());
-        VideoEntity videoEntity = optionalVideoEntity.get();
 
-        videoEntity.setTitle(video.title());
-        videoEntity.setDescription(video.description());
-        videoEntity.setUrl(video.url());
-        videoRepository.save(videoEntity);
-
-                return videoEntityToVideoMapper.to(videoEntity);
+        return createVideoPortout.execute(video);
     }
 
     @Override
     public Video createVideoIfNotExists(Video video) {
         LOGGER.info("createVideoIfNotExists - not found video, creating new video");
-        VideoEntity videoEntity = videoToVideoEntityMapper.to(video);
-        videoRepository.save(videoEntity);
-        Video newVideo = videoEntityToVideoMapper.to(videoEntity);
+        Video createVideo = new Video(null, video.title(), video.title(), video.url());
+        Video newVideo = createVideoPortout.execute(createVideo);
         LOGGER.info("createVideoIfNotExists - new video {}", newVideo);
 
         return newVideo;

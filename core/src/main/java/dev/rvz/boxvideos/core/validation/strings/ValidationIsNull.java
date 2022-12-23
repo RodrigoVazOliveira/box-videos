@@ -1,6 +1,6 @@
 package dev.rvz.boxvideos.core.validation.strings;
 
-class ValidationIsNull implements ValidationString{
+class ValidationIsNull implements ValidationString {
     private final ValidationString validationStringNext;
 
     public ValidationIsNull(ValidationString validationStringNext) {
@@ -9,8 +9,8 @@ class ValidationIsNull implements ValidationString{
 
     @Override
     public Boolean verify(String value) {
-        if (value == null) return true;
-        if (validationStringNext == null) return false;
+        if (value == null) return false;
+        if (validationStringNext == null) return true;
 
         return this.validationStringNext.verify(value);
     }

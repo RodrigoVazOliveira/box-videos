@@ -9,8 +9,8 @@ class ValidationIsBlank implements ValidationString {
 
     @Override
     public Boolean verify(String value) {
-        if (value.isBlank()) return true;
-        if (validationStringNext == null) return false;
+        if (value.isBlank()) return false;
+        if (validationStringNext == null) return true;
 
         return this.validationStringNext.verify(value);
     }
