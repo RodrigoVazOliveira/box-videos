@@ -6,54 +6,75 @@ import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-@ExtendWith(MockitoExtension.class)
+@DataJpaTest
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
+@PropertySource({
+        "classpath:application.properties"
+})
+@ContextConfiguration(classes = {
+        VideoRepository.class,
+        VideoEntityToVideoMapper.class,
+        GetVideoByIdAdapter.class
+})
+@EntityScan("dev.rvz.*")
+@EnableJpaRepositories("dev.rvz.*")
 class GetVideoByIdAdapterTest {
 
-    @Mock
+    @Autowired
     private VideoRepository videoRepository;
 
-    @Mock
+    @Autowired
     private VideoEntityToVideoMapper videoEntityToVideoMapper;
 
-    @InjectMocks
+    @Autowired
     private GetVideoByIdAdapter getVideoByIdAdapter;
 
     @Test
     void test_get_video_by_id_with_success() {
         VideoEntity videoEntity = new VideoEntity();
-        videoEntity.setId(1L);
+        videoEntity.setTitle("Titulo 1");
+        videoEntity.setDescription("Descrição 1");
+        videoEntity.setUrl("http://localhost");
+        videoRepository.save(videoEntity);
 
-        Video video = new Video(videoEntity.getId(), videoEntity.getTitle(), videoEntity.getDescription(), videoEntity.getUrl());
+        Video result = getVideoByIdAdapter.execute(videoEntity.getId());
 
-        Mockito.when(videoRepository.findById(Mockito.any())).thenReturn(Optional.of(videoEntity));
-        Mockito.when(videoEntityToVideoMapper.to(Mockito.any())).thenReturn(video);
+        Assertions.assertEquals(videoEntity.getTitle(), result.title());
+        Assertions.assertEquals(videoEntity.getDescription(), result.description());
+        Assertions.assertEquals(videoEntity.getUrl(), result.url());
+        Assertions.assertEquals(videoEntity.getId(), result.id());
 
-        Video result = getVideoByIdAdapter.execute(1L);
+        videoRepository.delete(videoEntity);
+    }
 
-        Assertions.assertEquals(video, result);
+
+    @Test
+    void test_get_video_by_id_exists() {
+        VideoEntity videoEntity = new VideoEntity();
+        videoEntity.setTitle("Titulo 1");
+        videoEntity.setDescription("Descrição 1");
+        videoEntity.setUrl("http://localhost");
+        videoRepository.save(videoEntity);
+
+        Boolean result = getVideoByIdAdapter.notExistsVideoById(videoEntity.getId());
+
+        Assertions.assertFalse(result);
+        videoRepository.delete(videoEntity);
     }
 
     @Test
     void test_get_video_by_id_not_exists() {
-        Mockito.when(videoRepository.existsById(Mockito.any())).thenReturn(false);
-        Boolean notExistsVideoById = getVideoByIdAdapter.notExistsVideoById(1L);
+        Boolean result = getVideoByIdAdapter.notExistsVideoById(1L);
 
-        Assertions.assertTrue(notExistsVideoById);
-    }
-
-    @Test
-    void test_get_video_by_id_exists() {
-        Mockito.when(videoRepository.existsById(Mockito.any())).thenReturn(true);
-        Boolean notExistsVideoById = getVideoByIdAdapter.notExistsVideoById(1L);
-
-        Assertions.assertFalse(notExistsVideoById);
+        Assertions.assertTrue(result);
     }
 }

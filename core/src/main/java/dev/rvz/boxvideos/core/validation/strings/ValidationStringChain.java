@@ -10,6 +10,7 @@ public class ValidationStringChain {
     }
 
     public Boolean isValid() {
+        configure();
         return validationString.verify(value);
     }
 
