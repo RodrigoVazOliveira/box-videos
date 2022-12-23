@@ -10,7 +10,7 @@ import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
-import dev.rvz.boxvideos.adapters.inbound.api.VideoRestController;
+import dev.rvz.boxvideos.adapters.inbound.api.*;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
@@ -31,7 +31,14 @@ import java.util.Arrays;
 
 @WebMvcTest
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = {VideoRestController.class, ExceptionHandlerDefaultRest.class})
+@ContextConfiguration(classes = {
+        ExceptionHandlerDefaultRest.class,
+        CreateVideoController.class,
+        GetAllVideoRestController.class,
+        GetVideoByIdRestController.class,
+        UpdateCompleteVideoRestController.class,
+        UpdatePartialVideoRestController.class
+})
 class VideoRestControllerTest {
 
     @MockBean
@@ -187,7 +194,7 @@ class VideoRestControllerTest {
         String response = objectMapper.writeValueAsString(responseException);
         Mockito.when(updatePartialRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updatePartialVideoPortIn.updateVideoAlreadyExists(Mockito.any())).thenThrow(
-              new VideoNotFoundException("Não existe vídeo com id 1")
+                new VideoNotFoundException("Não existe vídeo com id 1")
         );
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/videos/1")
