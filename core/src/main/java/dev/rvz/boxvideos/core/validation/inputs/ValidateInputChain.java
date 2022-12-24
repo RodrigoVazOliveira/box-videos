@@ -12,9 +12,9 @@ public class ValidateInputChain {
         this.infoValidationInputs = infoValidationInputs;
     }
 
-    public List<InfoValidationInput> validate(Object input) {
+    public List<InfoValidationInput> validate(String nameInput, Object input) {
         configure();
-        validateInput.verify(input.getClass().getName(), input);
+        validateInput.verify(nameInput, input);
 
         return infoValidationInputs;
     }
