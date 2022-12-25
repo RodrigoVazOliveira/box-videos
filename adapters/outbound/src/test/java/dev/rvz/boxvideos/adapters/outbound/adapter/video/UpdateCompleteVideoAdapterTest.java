@@ -1,10 +1,8 @@
-package dev.rvz.boxvideos.adapters.outbound.adapter;
+package dev.rvz.boxvideos.adapters.outbound.adapter.video;
 
 import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoEntityToVideoMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoToVideoEntityMapper;
-import dev.rvz.boxvideos.adapters.outbound.adapter.video.CreateVideoAdapter;
-import dev.rvz.boxvideos.adapters.outbound.adapter.video.UpdateCompleteVideoAdapter;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import org.junit.jupiter.api.Assertions;
