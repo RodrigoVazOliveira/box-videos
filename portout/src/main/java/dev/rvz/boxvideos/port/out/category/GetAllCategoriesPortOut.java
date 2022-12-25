@@ -1,7 +1,7 @@
-package dev.rvz.boxvideos.port.in.category;
+package dev.rvz.boxvideos.port.out.category;
 
 import dev.rvz.boxvideos.core.domain.category.model.Category;
 
-public interface GetAllCategoryPortIn {
+public interface GetAllCategoriesPortOut {
     Iterable<Category> execute();
 }

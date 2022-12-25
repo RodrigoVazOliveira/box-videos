@@ -2,7 +2,7 @@ package dev.rvz.boxvideos.application.video.service;
 
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.out.GetVideoByIdPortOut;
+import dev.rvz.boxvideos.port.out.video.GetVideoByIdPortOut;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

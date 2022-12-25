@@ -2,8 +2,8 @@ package dev.rvz.boxvideos.adapters.outbound.service;
 
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.out.DeleteVideoByIdPortOut;
-import dev.rvz.boxvideos.port.out.GetVideoByIdPortOut;
+import dev.rvz.boxvideos.port.out.video.DeleteVideoByIdPortOut;
+import dev.rvz.boxvideos.port.out.video.GetVideoByIdPortOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

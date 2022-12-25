@@ -4,7 +4,7 @@ import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
 import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoEntityToIterableVideoMapper;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.out.GetAllVideosPortOut;
+import dev.rvz.boxvideos.port.out.video.GetAllVideosPortOut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

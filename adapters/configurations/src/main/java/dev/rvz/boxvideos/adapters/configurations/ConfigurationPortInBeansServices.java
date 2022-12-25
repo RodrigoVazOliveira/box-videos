@@ -2,7 +2,7 @@ package dev.rvz.boxvideos.adapters.configurations;
 
 
 import dev.rvz.boxvideos.application.video.service.*;
-import dev.rvz.boxvideos.port.out.*;
+import dev.rvz.boxvideos.port.out.video.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,7 +1,7 @@
 package dev.rvz.boxvideos.application.video.service;
 
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.out.UpdateCompleteVideoPortOut;
+import dev.rvz.boxvideos.port.out.video.UpdateCompleteVideoPortOut;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
