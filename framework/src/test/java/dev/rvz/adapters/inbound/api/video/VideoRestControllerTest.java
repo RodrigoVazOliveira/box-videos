@@ -1,4 +1,4 @@
-package dev.rvz.adapters.inbound.api;
+package dev.rvz.adapters.inbound.api.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.*;
