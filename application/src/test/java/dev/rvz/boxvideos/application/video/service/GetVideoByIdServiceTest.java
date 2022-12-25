@@ -5,36 +5,47 @@ import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.out.video.GetVideoByIdPortOut;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class GetVideoByIdServiceTest {
-
-    @Mock
-    private GetVideoByIdPortOut getVideoByIdPortOut;
-
-    @InjectMocks
-    private GetVideoByIdService getVideoByIdService;
 
     @Test
     void test_get_video_by_id_with_success() {
-        Video video = new Video(1L, "", "", "");
-        Mockito.when(getVideoByIdPortOut.notExistsVideoById(Mockito.any())).thenReturn(false);
-        Mockito.when(getVideoByIdPortOut.execute(Mockito.any())).thenReturn(video);
+        GetVideoByIdPortOut getVideoByIdPortOut = new GetVideoByIdPortOut() {
 
+
+            @Override
+            public Video execute(Long id) {
+                Video video = new Video(1L, "", "", "");
+                return video;
+            }
+
+            @Override
+            public Boolean notExistsVideoById(Long id) {
+                return false;
+            }
+        };
+        GetVideoByIdService getVideoByIdService = new GetVideoByIdService(getVideoByIdPortOut);
         Video result = getVideoByIdService.execute(1L);
 
-        Assertions.assertEquals(video, result);
+        Assertions.assertEquals(1L, result.id());
     }
 
     @Test
     void test_get_video_by_id_without_success() {
-        Mockito.when(getVideoByIdPortOut.notExistsVideoById(Mockito.any())).thenReturn(true);
+        GetVideoByIdPortOut getVideoByIdPortOut = new GetVideoByIdPortOut() {
 
+
+            @Override
+            public Video execute(Long id) {
+                return null;
+            }
+
+            @Override
+            public Boolean notExistsVideoById(Long id) {
+                return true;
+            }
+        };
+        GetVideoByIdService getVideoByIdService = new GetVideoByIdService(getVideoByIdPortOut);
         VideoNotFoundException resultException = Assertions.assertThrows(VideoNotFoundException.class, () -> {
             getVideoByIdService.execute(1L);
         });

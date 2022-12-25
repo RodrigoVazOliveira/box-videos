@@ -4,29 +4,27 @@ import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.out.video.CreateVideoPortout;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class CreateVideoServiceTest {
 
-    @Mock
-    private CreateVideoPortout createVideoPortout;
-
-    @InjectMocks
-    private CreateVideoService createVideoService;
+    private final CreateVideoPortout createVideoPortout = new CreateVideoPortout() {
+        @Override
+        public Video execute(Video video) {
+            return new Video(1L, video.title(), video.description(), video.url());
+        }
+    };
 
     @Test
     void test_video_return_with_success() {
-        Video video = new Video(1L, "Testes 1", "Descrição", "http://meuvideo.comb.br");
-        Mockito.when(createVideoPortout.execute(Mockito.any())).thenReturn(video);
-        Video requestSaveVideo = new Video(1L, "Testes 1", "Descrição", "http://meuvideo.comb.br");
+        Video requestSaveVideo = new Video(null, "Testes 1", "Descrição", "http://meuvideo.comb.br");
+        CreateVideoService createVideoService = new CreateVideoService(createVideoPortout);
+
         Video result = createVideoService.execute(requestSaveVideo);
 
-        Assertions.assertEquals(video, requestSaveVideo);
+        Assertions.assertEquals(requestSaveVideo.title(), result.title());
+        Assertions.assertEquals(requestSaveVideo.description(), result.description());
+        Assertions.assertEquals(requestSaveVideo.url(), result.url());
+        Assertions.assertEquals(1L, result.id());
     }
 
 }
