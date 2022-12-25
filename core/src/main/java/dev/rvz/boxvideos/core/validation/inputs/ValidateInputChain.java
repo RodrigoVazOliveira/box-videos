@@ -6,22 +6,38 @@ import java.util.List;
 
 public class ValidateInputChain {
     private final List<InfoValidationInput> infoValidationInputs;
-    private ValidateInput validateInput;
 
     public ValidateInputChain(List<InfoValidationInput> infoValidationInputs) {
         this.infoValidationInputs = infoValidationInputs;
     }
 
-    public List<InfoValidationInput> validate(String nameInput, Object input) {
-        configure();
+    public ValidateInputChain validate(String nameInput, Object input) {
+        ValidateInput validateInput = configureExistsData();
         validateInput.verify(nameInput, input);
 
-        return infoValidationInputs;
+        return this;
     }
 
-    private void configure() {
-        validateInput = new ValidateIsNull(
+    public ValidateInputChain validateLength(ValidateData validateData) {
+        for (InfoValidationInput validationInput : infoValidationInputs) {
+            if (validationInput.input() == validateData.nameInput()) {
+                return this;
+            }
+        }
+
+        ValidateLengthInput validateLengthInput = configureValidateLength();
+        validateLengthInput.verify(validateData);
+
+        return this;
+    }
+
+    private ValidateIsNull configureExistsData() {
+        return new ValidateIsNull(
                 new ValidateIsBlank(null, infoValidationInputs), infoValidationInputs
         );
+    }
+
+    private ValidateLengthInput configureValidateLength() {
+        return new ValidateMinLength(new ValidateMaxLength(null, infoValidationInputs), infoValidationInputs);
     }
 }
