@@ -3,7 +3,7 @@ package dev.rvz.boxvideos.adapters.inbound.api;
 import dev.rvz.boxvideos.adapters.commons.mapper.UpdatePartialRequestToVideoMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdatePartialRequest;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.UpdatePartialVideoPortIn;
+import dev.rvz.boxvideos.port.in.video.UpdatePartialVideoPortIn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

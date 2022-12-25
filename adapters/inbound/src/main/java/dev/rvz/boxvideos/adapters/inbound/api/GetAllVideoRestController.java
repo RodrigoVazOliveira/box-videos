@@ -3,7 +3,7 @@ package dev.rvz.boxvideos.adapters.inbound.api;
 import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.GetAllVideosPortIn;
+import dev.rvz.boxvideos.port.in.video.GetAllVideosPortIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

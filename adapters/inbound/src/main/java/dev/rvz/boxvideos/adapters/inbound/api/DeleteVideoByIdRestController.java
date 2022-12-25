@@ -1,7 +1,7 @@
 package dev.rvz.boxvideos.adapters.inbound.api;
 
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.DeleteVideoByIdPortIn;
+import dev.rvz.boxvideos.port.in.video.DeleteVideoByIdPortIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

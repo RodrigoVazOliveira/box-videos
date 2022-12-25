@@ -5,7 +5,7 @@ import dev.rvz.boxvideos.adapters.commons.mapper.VideoToUpdateCompleteVideoRespo
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.UpdateCompleteVideoPortIn;
+import dev.rvz.boxvideos.port.in.video.UpdateCompleteVideoPortIn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

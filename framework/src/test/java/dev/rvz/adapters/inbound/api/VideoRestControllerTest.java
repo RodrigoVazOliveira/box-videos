@@ -14,7 +14,7 @@ import dev.rvz.boxvideos.adapters.inbound.api.*;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.in.*;
+import dev.rvz.boxvideos.port.in.video.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
