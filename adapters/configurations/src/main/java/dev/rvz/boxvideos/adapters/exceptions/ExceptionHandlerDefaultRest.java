@@ -1,5 +1,6 @@
 package dev.rvz.boxvideos.adapters.exceptions;
 
+import dev.rvz.boxvideos.core.domain.category.exception.CategoryNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseInputException;
 import dev.rvz.boxvideos.core.domain.video.exception.ValidateInputException;
@@ -22,6 +23,12 @@ public class ExceptionHandlerDefaultRest {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ResponseInputException eesponseInputException(ValidateInputException e) {
         return new ResponseInputException(e.getInfoValidationInputs());
+    }
+
+    @ExceptionHandler({CategoryNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ResponseException eategoryNotFoundException(CategoryNotFoundException e) {
+        return new ResponseException(404, e.getMessage());
     }
 
 }
