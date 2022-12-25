@@ -1,7 +1,7 @@
 package dev.rvz.boxvideos.adapters.inbound.api;
 
-import dev.rvz.boxvideos.adapters.commons.mapper.UpdateCompleteVideoRequestToVideoMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.VideoToUpdateCompleteVideoResponseMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.video.UpdateCompleteVideoRequestToVideoMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoToUpdateCompleteVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;

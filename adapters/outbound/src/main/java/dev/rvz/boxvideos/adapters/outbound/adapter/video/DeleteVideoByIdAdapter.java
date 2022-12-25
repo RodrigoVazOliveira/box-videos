@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.outbound.service;
+package dev.rvz.boxvideos.adapters.outbound.adapter.video;
 
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;

@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.commons.mapper;
+package dev.rvz.boxvideos.adapters.commons.mapper.video;
 
 
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;

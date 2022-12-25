@@ -1,6 +1,6 @@
 package dev.rvz.boxvideos.adapters.inbound.api;
 
-import dev.rvz.boxvideos.adapters.commons.mapper.VideoToGetVideoResponseMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoToGetVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.video.GetVideoByIdPortIn;

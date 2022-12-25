@@ -1,7 +1,7 @@
 package dev.rvz.adapters.inbound.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.rvz.boxvideos.adapters.commons.mapper.*;
+import dev.rvz.boxvideos.adapters.commons.mapper.video.*;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdatePartialRequest;

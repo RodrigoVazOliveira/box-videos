@@ -1,7 +1,8 @@
-package dev.rvz.boxvideos.adapters.outbound.service;
+package dev.rvz.boxvideos.adapters.outbound.adapter;
 
 import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
-import dev.rvz.boxvideos.adapters.commons.mapper.IterableVideoEntityToIterableVideoMapper;
+import dev.rvz.boxvideos.adapters.commons.mapper.video.IterableVideoEntityToIterableVideoMapper;
+import dev.rvz.boxvideos.adapters.outbound.adapter.video.GetAllVideosAdapter;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import org.junit.jupiter.api.Assertions;
