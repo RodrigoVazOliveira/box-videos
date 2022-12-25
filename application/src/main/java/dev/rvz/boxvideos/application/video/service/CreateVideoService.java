@@ -15,6 +15,9 @@ public class CreateVideoService implements CreateVideoPortIn {
 
     @Override
     public Video execute(Video video) {
+        ValidateInputService validateInputService = new ValidateInputService(video);
+        validateInputService.validateInputs();
+        
         return createVideoPortout.execute(video);
     }
 }

@@ -13,6 +13,7 @@ public class UpdateCompleteVideoService implements UpdateCompleteVideoPortIn {
 
     @Override
     public Video execute(Video video) {
+        new ValidateInputService(video).validateInputs();
         Boolean existsVideoById = videoExists(video.id());
         if (existsVideoById) {
             return updateCompleteVideoPortOut.updateAlreadyExists(video);
