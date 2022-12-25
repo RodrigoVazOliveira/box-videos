@@ -10,7 +10,7 @@ import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
-import dev.rvz.boxvideos.adapters.inbound.api.*;
+import dev.rvz.boxvideos.adapters.inbound.api.video.*;
 import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;

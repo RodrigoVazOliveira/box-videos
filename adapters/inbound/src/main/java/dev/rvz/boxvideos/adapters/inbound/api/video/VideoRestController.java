@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.inbound.api;
+package dev.rvz.boxvideos.adapters.inbound.api.video;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.inbound.api;
+package dev.rvz.boxvideos.adapters.inbound.api.video;
 
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.video.DeleteVideoByIdPortIn;

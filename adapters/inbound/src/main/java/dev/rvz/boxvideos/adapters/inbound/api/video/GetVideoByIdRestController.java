@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.inbound.api;
+package dev.rvz.boxvideos.adapters.inbound.api.video;
 
 import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoToGetVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
