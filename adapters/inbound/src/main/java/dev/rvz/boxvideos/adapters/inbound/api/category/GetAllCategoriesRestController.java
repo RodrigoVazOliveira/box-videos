@@ -24,7 +24,7 @@ public class GetAllCategoriesRestController {
         this.allCategoriesToAllCategoriesResponseMapper = allCategoriesToAllCategoriesResponseMapper;
     }
 
-    @GetMapping
+    @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     Iterable<CategoryResponse> getAllCategories() {
         LOGGER.info("getAllCategories - get all categories");
