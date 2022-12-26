@@ -9,6 +9,7 @@ import dev.rvz.boxvideos.port.in.category.CreateCategoryPortIn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CreateCategoryRestController {
     private final Logger LOGGER = LoggerFactory.getLogger(CreateCategoryRestController.class);
     private final CreateCategoryPortIn createCategoryPortIn;
