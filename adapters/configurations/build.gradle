@@ -25,4 +25,5 @@ dependencies {
     implementation project(':application')
     implementation project(':core')
     implementation project(':portout')
+    implementation project(':portin')
 }
