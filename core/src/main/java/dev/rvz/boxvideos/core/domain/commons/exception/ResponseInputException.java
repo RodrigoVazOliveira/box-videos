@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.core.domain.video.exception;
+package dev.rvz.boxvideos.core.domain.commons.exception;
 
 public final class ResponseInputException {
     private Integer status = 400;

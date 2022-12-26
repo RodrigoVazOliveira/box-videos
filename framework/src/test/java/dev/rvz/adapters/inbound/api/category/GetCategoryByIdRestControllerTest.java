@@ -7,7 +7,7 @@ import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
 import dev.rvz.boxvideos.adapters.inbound.api.category.GetCategoryByIdRestController;
 import dev.rvz.boxvideos.core.domain.category.exception.CategoryNotFoundException;
 import dev.rvz.boxvideos.core.domain.category.model.Category;
-import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
+import dev.rvz.boxvideos.core.domain.commons.exception.ResponseException;
 import dev.rvz.boxvideos.port.in.category.GetCategoryByIdPortIn;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
