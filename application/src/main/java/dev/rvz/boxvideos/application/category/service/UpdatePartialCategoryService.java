@@ -26,34 +26,38 @@ public class UpdatePartialCategoryService implements UpdatePartialCategoryPortIn
     public Category update(Category category) {
         Long id = category.id();
         Category categoryOld = getCategoryByIdPortIn.getCategoryById(id);
-        validateLengthInputs(category);
+
         ValidationStringChain validationTitle = new ValidationStringChain(category.title());
         ValidationStringChain validationColor = new ValidationStringChain(category.color());
 
+        List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
+        ValidateInputChain validateInputChain = new ValidateInputChain(infoValidationInputs);
 
         if (validationTitle.isValid() && validationColor.isValid()) {
             Category updateCategory = new Category(categoryOld.id(), category.title(), category.color());
+            validateInputChain.validateLength(new ValidateData("title", category.title(), 3, 150));
+            validateInputChain.validateLength(new ValidateData("color", category.color(), 3, 150));
+            validateLengthInputs(infoValidationInputs);
 
             return createCategoryPortIn.create(updateCategory);
         } else if (validationTitle.isValid() && !validationColor.isValid()) {
+            validateInputChain.validateLength(new ValidateData("title", category.title(), 3, 150));
             Category updateCategory = new Category(categoryOld.id(), category.title(), categoryOld.color());
+            validateLengthInputs(infoValidationInputs);
 
             return createCategoryPortIn.create(updateCategory);
         } else if (!validationTitle.isValid() && validationColor.isValid()) {
             Category updateCategory = new Category(categoryOld.id(), categoryOld.title(), category.color());
+            validateInputChain.validateLength(new ValidateData("color", category.color(), 3, 150));
+            validateLengthInputs(infoValidationInputs);
 
             return createCategoryPortIn.create(updateCategory);
-        } else {
-            return createCategoryPortIn.create(categoryOld);
         }
+        
+        return categoryOld;
     }
 
-    private static void validateLengthInputs(Category category) {
-        List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
-        ValidateInputChain validateInputChain = new ValidateInputChain(infoValidationInputs);
-        validateInputChain.validateLength(new ValidateData("title", category.title(), 3, 150));
-        validateInputChain.validateLength(new ValidateData("color", category.color(), 3, 150));
-
+    private static void validateLengthInputs(List<InfoValidationInput> infoValidationInputs) {
         if (!infoValidationInputs.isEmpty()) {
             throw new ValidateInputException(infoValidationInputs);
         }
