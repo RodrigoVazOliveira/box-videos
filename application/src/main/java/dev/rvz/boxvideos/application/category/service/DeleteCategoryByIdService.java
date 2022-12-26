@@ -23,8 +23,6 @@ public class DeleteCategoryByIdService implements DeleteCategoryByIdPortIn {
         if (deleteCategoryByIdPortOut.notExistsCategoryById(id)) {
             LOGGER.log(Level.WARNING, "category not found");
             throw new CategoryNotFoundException("categoria com id %d não existe.".formatted(id));
-
-
         }
 
         deleteCategoryByIdPortOut.deleteById(id);
