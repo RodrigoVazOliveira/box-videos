@@ -34,19 +34,19 @@ public class UpdateCompleteVideoRestController extends VideoRestController {
         LOGGER.info("updatecompleteVideo - id {}, updateCompleteVideoRequest {}", id, updateCompleteVideoRequest);
         Video video = updateCompleteVideoRequestToVideoMapper.to(updateCompleteVideoRequest, id);
         Boolean videoExists = updateCompleteVideoPortIn.videoExists(id);
-        Video videoProcessed = updateCompleteVideoPortIn.execute(video);
-
         URI uri = getUriWithoutId(httpServletRequest);
 
         if (videoExists) {
-            return ResponseEntity
-                    .noContent()
-                    .header("Content-Location", uri.toString())
-                    .build();
+            Video updateVideo = updateCompleteVideoPortIn.execute(video, true);
+            UpdateCompleteVideoResponse updateCompleteVideoResponse = videoToUpdateCompleteVideoResponseMapper.to(updateVideo);
+
+            return ResponseEntity.ok(updateCompleteVideoResponse);
         }
 
+        Video newVideo = updateCompleteVideoPortIn.execute(video, false);
+        
         return ResponseEntity
                 .created(uri)
-                .body(videoToUpdateCompleteVideoResponseMapper.to(videoProcessed));
+                .body(videoToUpdateCompleteVideoResponseMapper.to(newVideo));
     }
 }

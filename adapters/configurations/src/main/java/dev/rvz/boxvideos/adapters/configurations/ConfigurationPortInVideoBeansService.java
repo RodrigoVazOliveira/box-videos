@@ -2,6 +2,7 @@ package dev.rvz.boxvideos.adapters.configurations;
 
 
 import dev.rvz.boxvideos.application.video.service.*;
+import dev.rvz.boxvideos.port.in.video.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.out.video.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +26,9 @@ class ConfigurationPortInVideoBeansService {
     }
 
     @Bean
-    UpdateCompleteVideoService updateCompleteVideoService(UpdateCompleteVideoPortOut updateCompleteVideoPortOut) {
-        return new UpdateCompleteVideoService(updateCompleteVideoPortOut);
+    UpdateCompleteVideoService updateCompleteVideoService(CreateVideoPortIn createVideoPortIn,
+                                                          GetVideoByIdPortOut getVideoByIdPortOut) {
+        return new UpdateCompleteVideoService(createVideoPortIn, getVideoByIdPortOut);
     }
 
     @Bean
