@@ -152,7 +152,7 @@ class VideoRestControllerTest {
         String response = objectMapper.writeValueAsString(updateCompleteVideoResponse);
 
 
-        Mockito.when(updateCompleteVideoPortIn.execute(Mockito.any())).thenReturn(video);
+        Mockito.when(updateCompleteVideoPortIn.execute(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updateCompleteVideoRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updateCompleteVideoPortIn.videoExists(Mockito.any())).thenReturn(false);
         Mockito.when(videoToUpdateCompleteVideoResponseMapper.to(Mockito.any())).thenReturn(updateCompleteVideoResponse);
@@ -164,16 +164,24 @@ class VideoRestControllerTest {
     void test_update_complete_exists_videos_response_handred_two_four() throws Exception {
         UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost");
         Video video = new Video(1L, "Filme 1", "Fileme descriacao", "http://localhost");
-
+        UpdateCompleteVideoResponse updateCompleteVideoResponse = new UpdateCompleteVideoResponse(video.id(), video.title(), video.description(), video.url());
         ObjectMapper objectMapper = new ObjectMapper();
         String updateRequest = objectMapper.writeValueAsString(updateCompleteVideoRequest);
+        String response = objectMapper.writeValueAsString(updateCompleteVideoResponse);
 
-
-        Mockito.when(updateCompleteVideoPortIn.execute(Mockito.any())).thenReturn(video);
+        Mockito.when(updateCompleteVideoPortIn.execute(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updateCompleteVideoRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
         Mockito.when(updateCompleteVideoPortIn.videoExists(Mockito.any())).thenReturn(true);
+        Mockito.when(videoToUpdateCompleteVideoResponseMapper.to(Mockito.any())).thenReturn(updateCompleteVideoResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1").contentType(MediaType.APPLICATION_JSON).content(updateRequest)).andExpect(MockMvcResultMatchers.status().isNoContent()).andExpect(MockMvcResultMatchers.header().string("Content-Location", "http://localhost/videos/1"));
+        mockMvc.perform(MockMvcRequestBuilders.put("/videos/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequest))
+                .andExpect(
+                        MockMvcResultMatchers.status().isOk()
+                ).andExpect(
+                        MockMvcResultMatchers.content().json(response)
+                );
     }
 
     @Test
