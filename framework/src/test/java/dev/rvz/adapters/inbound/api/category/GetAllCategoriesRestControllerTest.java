@@ -54,7 +54,7 @@ class GetAllCategoriesRestControllerTest {
 
         Mockito.when(getAllCategoriesPortIn.execute()).thenReturn(categories);
         Mockito.when(allCategoriesToAllCategoriesResponseMapper.to(Mockito.any())).thenReturn(categoryResponses);
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/"))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
