@@ -1,7 +1,7 @@
 package dev.rvz.boxvideos.application.video.service;
 
-import dev.rvz.boxvideos.core.domain.video.exception.InfoValidationInput;
-import dev.rvz.boxvideos.core.domain.video.exception.ValidateInputException;
+import dev.rvz.boxvideos.core.domain.commons.exception.InfoValidationInput;
+import dev.rvz.boxvideos.core.domain.commons.exception.ValidateInputException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.core.validation.inputs.ValidateData;
 import dev.rvz.boxvideos.core.validation.inputs.ValidateInputChain;

@@ -1,6 +1,6 @@
 package dev.rvz.boxvideos.core.validation.inputs;
 
-import dev.rvz.boxvideos.core.domain.video.exception.InfoValidationInput;
+import dev.rvz.boxvideos.core.domain.commons.exception.InfoValidationInput;
 
 import java.util.List;
 

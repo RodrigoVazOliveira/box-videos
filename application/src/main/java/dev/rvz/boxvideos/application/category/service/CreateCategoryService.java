@@ -1,8 +1,8 @@
 package dev.rvz.boxvideos.application.category.service;
 
 import dev.rvz.boxvideos.core.domain.category.model.Category;
-import dev.rvz.boxvideos.core.domain.video.exception.InfoValidationInput;
-import dev.rvz.boxvideos.core.domain.video.exception.ValidateInputException;
+import dev.rvz.boxvideos.core.domain.commons.exception.InfoValidationInput;
+import dev.rvz.boxvideos.core.domain.commons.exception.ValidateInputException;
 import dev.rvz.boxvideos.core.validation.inputs.ValidateData;
 import dev.rvz.boxvideos.core.validation.inputs.ValidateInputChain;
 import dev.rvz.boxvideos.port.in.category.CreateCategoryPortIn;

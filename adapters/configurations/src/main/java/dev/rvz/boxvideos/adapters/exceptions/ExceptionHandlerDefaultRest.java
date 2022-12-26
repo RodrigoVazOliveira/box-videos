@@ -1,9 +1,9 @@
 package dev.rvz.boxvideos.adapters.exceptions;
 
 import dev.rvz.boxvideos.core.domain.category.exception.CategoryNotFoundException;
-import dev.rvz.boxvideos.core.domain.video.exception.ResponseException;
-import dev.rvz.boxvideos.core.domain.video.exception.ResponseInputException;
-import dev.rvz.boxvideos.core.domain.video.exception.ValidateInputException;
+import dev.rvz.boxvideos.core.domain.commons.exception.ResponseException;
+import dev.rvz.boxvideos.core.domain.commons.exception.ResponseInputException;
+import dev.rvz.boxvideos.core.domain.commons.exception.ValidateInputException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

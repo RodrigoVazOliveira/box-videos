@@ -45,7 +45,7 @@ public class CreateCategoryRestController {
         LOGGER.info("createNewCategory - newCategory {}", newCategory);
         Long id = newCategory.id();
 
-        String url = httpServletRequest.getRequestURL().toString() + "/%s".formatted(id);
+        String url = httpServletRequest.getRequestURL().toString() + "%s/".formatted(id);
         URI uri = new URI(url);
         LOGGER.info("getUri - Location: {}", url);
 
