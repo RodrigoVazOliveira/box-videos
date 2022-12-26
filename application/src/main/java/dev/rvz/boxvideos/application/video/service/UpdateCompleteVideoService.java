@@ -1,29 +1,31 @@
 package dev.rvz.boxvideos.application.video.service;
 
 import dev.rvz.boxvideos.core.domain.video.model.Video;
+import dev.rvz.boxvideos.port.in.video.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.in.video.UpdateCompleteVideoPortIn;
-import dev.rvz.boxvideos.port.out.video.UpdateCompleteVideoPortOut;
+import dev.rvz.boxvideos.port.out.video.GetVideoByIdPortOut;
 
 public class UpdateCompleteVideoService implements UpdateCompleteVideoPortIn {
-    private final UpdateCompleteVideoPortOut updateCompleteVideoPortOut;
+    private final CreateVideoPortIn createVideoPortIn;
+    private final GetVideoByIdPortOut getVideoByIdPortOut;
 
-    public UpdateCompleteVideoService(UpdateCompleteVideoPortOut updateCompleteVideoPortOut) {
-        this.updateCompleteVideoPortOut = updateCompleteVideoPortOut;
+    public UpdateCompleteVideoService(CreateVideoPortIn createVideoPortIn, GetVideoByIdPortOut getVideoByIdPortOut) {
+        this.createVideoPortIn = createVideoPortIn;
+        this.getVideoByIdPortOut = getVideoByIdPortOut;
     }
-
+    
     @Override
-    public Video execute(Video video) {
-        new ValidateInputService(video).validateInputs();
-        Boolean existsVideoById = videoExists(video.id());
-        if (existsVideoById) {
-            return updateCompleteVideoPortOut.updateAlreadyExists(video);
+    public Video execute(Video video, Boolean videExists) {
+        if (videExists) {
+            return createVideoPortIn.execute(video);
         }
 
-        return updateCompleteVideoPortOut.createVideoIfNotExists(video);
+        Video newVideo = new Video(null, video.title(), video.description(), video.url());
+        return createVideoPortIn.execute(newVideo);
     }
 
     @Override
     public Boolean videoExists(Long id) {
-        return updateCompleteVideoPortOut.existsVideoById(id);
+        return !getVideoByIdPortOut.notExistsVideoById(id);
     }
 }
