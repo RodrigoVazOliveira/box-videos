@@ -38,7 +38,7 @@ public class CreateCategoryService implements CreateCategoryPortIn {
                 .validateLength(validateDataTitle)
                 .validateLength(validateDataColor);
 
-        if (infoValidationInputs.isEmpty()) {
+        if (!infoValidationInputs.isEmpty()) {
             throw new ValidateInputException(infoValidationInputs);
         }
     }
