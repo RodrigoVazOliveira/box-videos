@@ -29,7 +29,7 @@ class CreateCategoryServiceTest {
         Assertions.assertNotNull(resutlException);
         Assertions.assertEquals(1, infoValidationInputs.size());
         Assertions.assertEquals("title", infoValidationInputs.get(0).input());
-        Assertions.assertEquals("O cmapo title deve ter no mínimo 3 de caracteres.", infoValidationInputs.get(0).message());
+        Assertions.assertEquals("O campo title deve ter no mínimo 3 de caracteres.", infoValidationInputs.get(0).message());
 
     }
 
@@ -50,7 +50,7 @@ class CreateCategoryServiceTest {
         Assertions.assertNotNull(resutlException);
         Assertions.assertEquals(1, infoValidationInputs.size());
         Assertions.assertEquals("color", infoValidationInputs.get(0).input());
-        Assertions.assertEquals("O cmapo color deve ter no mínimo 3 de caracteres.", infoValidationInputs.get(0).message());
+        Assertions.assertEquals("O campo color deve ter no mínimo 3 de caracteres.", infoValidationInputs.get(0).message());
     }
 
     @Test
