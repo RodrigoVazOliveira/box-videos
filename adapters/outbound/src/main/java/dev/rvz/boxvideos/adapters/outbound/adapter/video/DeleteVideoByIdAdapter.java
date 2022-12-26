@@ -28,6 +28,7 @@ public class DeleteVideoByIdAdapter implements DeleteVideoByIdPortOut {
 
     @Override
     public Boolean notExitsVideo(Long id) {
+        LOGGER.info("notExitsVideo - id {}", id);
         return getVideoByIdPortOut.notExistsVideoById(id);
     }
 }
