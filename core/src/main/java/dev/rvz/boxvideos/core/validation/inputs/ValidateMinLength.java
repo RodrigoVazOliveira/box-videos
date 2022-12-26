@@ -25,7 +25,7 @@ public class ValidateMinLength implements ValidateLengthInput {
             String nameInput = validateData.nameInput();
             InfoValidationInput infoValidationInput = new InfoValidationInput(
                     nameInput,
-                    "O cmapo %s deve ter no mínimo %d de caracteres.".formatted(nameInput, minLength)
+                    "O campo %s deve ter no mínimo %d de caracteres.".formatted(nameInput, minLength)
             );
             infoValidationInputs.add(infoValidationInput);
         }
