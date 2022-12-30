@@ -1,7 +1,10 @@
 package dev.rvz.boxvideos.adapters.outbound.adapter.video;
 
+import dev.rvz.boxvideos.adapters.commons.entity.CategoryEntity;
 import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
+import dev.rvz.boxvideos.adapters.commons.mapper.category.CategoryEntityToCategoryMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoEntityToVideoMapper;
+import dev.rvz.boxvideos.adapters.outbound.repository.CategoryRepository;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(classes = {
         VideoRepository.class,
         VideoEntityToVideoMapper.class,
-        GetVideoByIdAdapter.class
+        CategoryEntityToCategoryMapper.class,
+        GetVideoByIdAdapter.class,
+        CategoryRepository.class
 })
 @EntityScan("dev.rvz.*")
 @EnableJpaRepositories("dev.rvz.*")
@@ -36,14 +41,26 @@ class GetVideoByIdAdapterTest {
     private VideoEntityToVideoMapper videoEntityToVideoMapper;
 
     @Autowired
+    private CategoryEntityToCategoryMapper categoryEntityToCategoryMapper;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private GetVideoByIdAdapter getVideoByIdAdapter;
 
     @Test
     void test_get_video_by_id_with_success() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setTitle("LIVRE");
+        categoryEntity.setColor("BLUE");
+        categoryRepository.save(categoryEntity);
+
         VideoEntity videoEntity = new VideoEntity();
         videoEntity.setTitle("Titulo 1");
         videoEntity.setDescription("Descrição 1");
         videoEntity.setUrl("http://localhost");
+        videoEntity.setCategoryEntity(categoryEntity);
         videoRepository.save(videoEntity);
 
         Video result = getVideoByIdAdapter.execute(videoEntity.getId());
@@ -54,6 +71,7 @@ class GetVideoByIdAdapterTest {
         Assertions.assertEquals(videoEntity.getId(), result.id());
 
         videoRepository.delete(videoEntity);
+        categoryRepository.deleteAll();
     }
 
 

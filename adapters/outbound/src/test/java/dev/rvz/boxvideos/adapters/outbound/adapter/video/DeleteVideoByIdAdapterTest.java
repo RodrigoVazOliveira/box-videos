@@ -1,8 +1,10 @@
 package dev.rvz.boxvideos.adapters.outbound.adapter.video;
 
 import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
+import dev.rvz.boxvideos.adapters.commons.mapper.category.CategoryEntityToCategoryMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.VideoEntityToVideoMapper;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
+import dev.rvz.boxvideos.core.domain.category.model.Category;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
         VideoRepository.class,
         GetVideoByIdAdapter.class,
         VideoEntityToVideoMapper.class,
+        CategoryEntityToCategoryMapper.class,
         DeleteVideoByIdAdapter.class
 })
 @EntityScan("dev.rvz.*")
@@ -32,6 +35,9 @@ class DeleteVideoByIdAdapterTest {
 
     @Autowired
     private VideoRepository videoRepository;
+
+    @Autowired
+    private CategoryEntityToCategoryMapper categoryEntityToCategoryMapper;
 
     @Autowired
     private GetVideoByIdAdapter getVideoByIdAdapter;
@@ -60,7 +66,7 @@ class DeleteVideoByIdAdapterTest {
     @Test
     void delete_video_exists() {
         VideoEntity videoEntity = createVideo();
-        Video video = new Video(videoEntity.getId(), "", "", "");
+        Video video = new Video(videoEntity.getId(), "", "", "", new Category(1L, "", ""));
         deleteVideoByIdAdapter.deleteById(video);
 
         Boolean notExitsVideo = deleteVideoByIdAdapter.notExitsVideo(videoEntity.getId());

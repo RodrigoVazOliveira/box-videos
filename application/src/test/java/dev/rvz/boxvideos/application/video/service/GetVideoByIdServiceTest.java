@@ -1,5 +1,6 @@
 package dev.rvz.boxvideos.application.video.service;
 
+import dev.rvz.boxvideos.core.domain.category.model.Category;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.out.video.GetVideoByIdPortOut;
@@ -15,8 +16,12 @@ class GetVideoByIdServiceTest {
 
             @Override
             public Video execute(Long id) {
-                Video video = new Video(1L, "", "", "");
-                return video;
+                return new Video(
+                        1L,
+                        "",
+                        "",
+                        "",
+                        new Category(1L, "", ""));
             }
 
             @Override
@@ -46,9 +51,7 @@ class GetVideoByIdServiceTest {
             }
         };
         GetVideoByIdService getVideoByIdService = new GetVideoByIdService(getVideoByIdPortOut);
-        VideoNotFoundException resultException = Assertions.assertThrows(VideoNotFoundException.class, () -> {
-            getVideoByIdService.execute(1L);
-        });
+        VideoNotFoundException resultException = Assertions.assertThrows(VideoNotFoundException.class, () -> getVideoByIdService.execute(1L));
 
         Assertions.assertEquals("Não existe vídeo com id 1", resultException.getMessage());
     }
