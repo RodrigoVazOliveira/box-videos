@@ -20,6 +20,11 @@ public class VideoEntity {
     private String url;
 
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity categoryEntity;
+
+
     public Long getId() {
         return id;
     }
@@ -52,6 +57,14 @@ public class VideoEntity {
         this.url = url;
     }
 
+    public CategoryEntity getCategoryEntity() {
+        return categoryEntity;
+    }
+
+    public void setCategoryEntity(CategoryEntity categoryEntity) {
+        this.categoryEntity = categoryEntity;
+    }
+
     @Override
     public String toString() {
         return "VideoEntity{" +
@@ -59,6 +72,7 @@ public class VideoEntity {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", url='" + url + '\'' +
+                ", categoryEntity=" + categoryEntity +
                 '}';
     }
 }
