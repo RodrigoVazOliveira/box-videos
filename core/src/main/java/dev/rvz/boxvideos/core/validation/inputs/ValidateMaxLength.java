@@ -1,6 +1,6 @@
 package dev.rvz.boxvideos.core.validation.inputs;
 
-import dev.rvz.boxvideos.core.domain.video.exception.InfoValidationInput;
+import dev.rvz.boxvideos.core.domain.commons.exception.InfoValidationInput;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ValidateMaxLength implements ValidateLengthInput {
             String nameInput = validateData.nameInput();
             InfoValidationInput infoValidationInput = new InfoValidationInput(
                     nameInput,
-                    "O cmapo %s deve ter no máximo %d de caracteres.".formatted(nameInput, maxLength)
+                    "O campo %s deve ter no máximo %d de caracteres.".formatted(nameInput, maxLength)
             );
             infoValidationInputs.add(infoValidationInput);
         }

@@ -1,8 +1,9 @@
 package dev.rvz.boxvideos.application.video.service;
 
+import dev.rvz.boxvideos.core.domain.category.model.Category;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
-import dev.rvz.boxvideos.port.out.DeleteVideoByIdPortOut;
+import dev.rvz.boxvideos.port.out.video.DeleteVideoByIdPortOut;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,9 +25,8 @@ class DeleteVideoByIdServiceTest {
 
         DeleteVideoByIdService deleteVideoByIdService = new DeleteVideoByIdService(deleteVideoByIdPortOut);
 
-        VideoNotFoundException resultException = Assertions.assertThrows(VideoNotFoundException.class, () -> {
-            deleteVideoByIdService.run(new Video(1L, "", "", ""));
-        });
+        VideoNotFoundException resultException = Assertions.assertThrows(VideoNotFoundException.class, () -> deleteVideoByIdService.run(new Video(1L, "", "", "",
+                new Category(1L, "", ""))));
 
         Assertions.assertEquals("Não existe vídeo com id 1", resultException.getMessage());
     }
@@ -46,7 +46,8 @@ class DeleteVideoByIdServiceTest {
         };
 
         DeleteVideoByIdService deleteVideoByIdService = new DeleteVideoByIdService(deleteVideoByIdPortOut);
-        Video video = new Video(1L, "", "", "");
+        Video video = new Video(1L, "", "", "",
+                new Category(1L, "", ""));
         deleteVideoByIdService.run(video);
 
     }
