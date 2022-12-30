@@ -5,12 +5,14 @@ import dev.rvz.boxvideos.adapters.commons.mapper.video.*;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdatePartialRequest;
+import dev.rvz.boxvideos.adapters.commons.responses.categories.CategoryResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.UpdateCompleteVideoResponse;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
 import dev.rvz.boxvideos.adapters.inbound.api.video.*;
+import dev.rvz.boxvideos.core.domain.category.model.Category;
 import dev.rvz.boxvideos.core.domain.commons.exception.ResponseException;
 import dev.rvz.boxvideos.core.domain.video.exception.VideoNotFoundException;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
@@ -87,15 +89,17 @@ class VideoRestControllerTest {
 
     @Test
     void test_create_video_with_success() throws Exception {
-        CreateVideoRequest createVideoRequest = new CreateVideoRequest("Video Test1", "Descrição teste", "http://wwww.google.com.br");
+        CreateVideoRequest createVideoRequest = new CreateVideoRequest("Video Test1", "Descrição teste", "http://wwww.google.com.br", 1L);
 
-        CreateVideoResponse createVideoResponse = new CreateVideoResponse(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br");
+        CreateVideoResponse createVideoResponse = new CreateVideoResponse(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br",
+                new CategoryResponse(1L, "LIVRE", "WHITE"));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(createVideoRequest);
         String responseJson = objectMapper.writeValueAsString(createVideoResponse);
 
-        Video video = new Video(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br");
+        Video video = new Video(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br",
+                new Category(1L, "", ""));
         Mockito.when(createVideoPortIn.execute(Mockito.any())).thenReturn(video);
         Mockito.when(videoToCreateVideoResponseMapper.to(Mockito.any())).thenReturn(createVideoResponse);
         mockMvc.perform(MockMvcRequestBuilders.post("/videos").contentType(MediaType.APPLICATION_JSON_VALUE).content(jsonRequest)).andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.content().json(responseJson)).andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/videos/1"));
@@ -104,7 +108,28 @@ class VideoRestControllerTest {
 
     @Test
     void test_get_all_videos() throws Exception {
-        Iterable<Video> videos = Arrays.asList(new Video(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"), new Video(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"), new Video(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br"));
+        Iterable<Video> videos = Arrays.asList(
+                new Video(
+                        1L,
+                        "titulo 1", "Teste descricao 1",
+                        "http://www.filme1.com.br",
+                        new Category(1L, "", "")
+                ),
+                new Video(
+                        2L,
+                        "titulo 2",
+                        "Teste descricao 2",
+                        "http://www.filme2.com.br",
+                        new Category(1L, "", "")
+                ),
+                new Video(
+                        1L,
+                        "titulo 3",
+                        "Teste descricao 3",
+                        "http://www.filme2.com.br",
+                        new Category(1L, "", "")
+                )
+        );
 
         Iterable<GetAllVideoResponse> allVideos = Arrays.asList(new GetAllVideoResponse(1L, "titulo 1", "Teste descricao 1", "http://www.filme1.com.br"), new GetAllVideoResponse(2L, "titulo 2", "Teste descricao 2", "http://www.filme2.com.br"), new GetAllVideoResponse(1L, "titulo 3", "Teste descricao 3", "http://www.filme2.com.br"));
 
@@ -118,7 +143,13 @@ class VideoRestControllerTest {
 
     @Test
     void test_get_video_by_id_with_success_handred_two_ok() throws Exception {
-        Video video = new Video(1L, "", "", "");
+        Video video = new Video(
+                1L,
+                "",
+                "",
+                "",
+                new Category(1L, "", "")
+        );
         GetVideoResponse getVideoResponse = new GetVideoResponse(1L, "", "", "");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -143,9 +174,14 @@ class VideoRestControllerTest {
 
     @Test
     void test_update_complete_not_exists_videos_response_handred_two_one() throws Exception {
-        UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost");
+        UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost", 1L);
         UpdateCompleteVideoResponse updateCompleteVideoResponse = new UpdateCompleteVideoResponse(1L, "Filme 1", "Fileme descriacao", "http://localhost");
-        Video video = new Video(1L, "Filme 1", "Fileme descriacao", "http://localhost");
+        Video video = new Video(
+                1L,
+                "Filme 1", "Fileme descriacao",
+                "http://localhost",
+                new Category(1L, "", "")
+        );
 
         ObjectMapper objectMapper = new ObjectMapper();
         String updateRequest = objectMapper.writeValueAsString(updateCompleteVideoRequest);
@@ -162,8 +198,13 @@ class VideoRestControllerTest {
 
     @Test
     void test_update_complete_exists_videos_response_handred_two_four() throws Exception {
-        UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost");
-        Video video = new Video(1L, "Filme 1", "Fileme descriacao", "http://localhost");
+        UpdateCompleteVideoRequest updateCompleteVideoRequest = new UpdateCompleteVideoRequest("Filme 1", "Fileme descriacao", "http://localhost", 1L);
+        Video video = new Video(
+                1L,
+                "Filme 1",
+                "Fileme descriacao",
+                "http://localhost",
+                new Category(1L, "", ""));
         UpdateCompleteVideoResponse updateCompleteVideoResponse = new UpdateCompleteVideoResponse(video.id(), video.title(), video.description(), video.url());
         ObjectMapper objectMapper = new ObjectMapper();
         String updateRequest = objectMapper.writeValueAsString(updateCompleteVideoRequest);
@@ -186,8 +227,9 @@ class VideoRestControllerTest {
 
     @Test
     void test_update_partial_with_sucess() throws Exception {
-        Video video = new Video(1L, "Title1", "Descricao1", "http://localhost");
-        UpdatePartialRequest updatePartialRequest = new UpdatePartialRequest("Title1", "Descricao1", "http://localhost");
+        Video video = new Video(1L, "Title1", "Descricao1", "http://localhost",
+                new Category(1L, "", ""));
+        UpdatePartialRequest updatePartialRequest = new UpdatePartialRequest("Title1", "Descricao1", "http://localhost", 1L);
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(updatePartialRequest);
         Mockito.when(updatePartialRequestToVideoMapper.to(Mockito.any(), Mockito.any())).thenReturn(video);
@@ -199,8 +241,9 @@ class VideoRestControllerTest {
     @Test
     void test_update_partial_response_video_not_found() throws Exception {
         ResponseException responseException = new ResponseException(404, "Não existe vídeo com id 1");
-        Video video = new Video(1L, "Title1", "Descricao1", "http://localhost");
-        UpdatePartialRequest updatePartialRequest = new UpdatePartialRequest("Title1", "Descricao1", "http://localhost");
+        Video video = new Video(1L, "Title1", "Descricao1", "http://localhost",
+                new Category(1L, "", ""));
+        UpdatePartialRequest updatePartialRequest = new UpdatePartialRequest("Title1", "Descricao1", "http://localhost", 1L);
         ObjectMapper objectMapper = new ObjectMapper();
         String request = objectMapper.writeValueAsString(updatePartialRequest);
         String response = objectMapper.writeValueAsString(responseException);

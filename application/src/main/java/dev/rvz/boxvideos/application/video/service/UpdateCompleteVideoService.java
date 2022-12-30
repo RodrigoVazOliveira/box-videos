@@ -13,14 +13,14 @@ public class UpdateCompleteVideoService implements UpdateCompleteVideoPortIn {
         this.createVideoPortIn = createVideoPortIn;
         this.getVideoByIdPortOut = getVideoByIdPortOut;
     }
-    
+
     @Override
     public Video execute(Video video, Boolean videExists) {
         if (videExists) {
             return createVideoPortIn.execute(video);
         }
 
-        Video newVideo = new Video(null, video.title(), video.description(), video.url());
+        Video newVideo = new Video(null, video.title(), video.description(), video.url(), video.category());
         return createVideoPortIn.execute(newVideo);
     }
 

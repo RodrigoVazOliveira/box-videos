@@ -2,6 +2,7 @@ package dev.rvz.boxvideos.adapters.configurations;
 
 import dev.rvz.boxvideos.application.category.service.*;
 import dev.rvz.boxvideos.port.in.category.CreateCategoryPortIn;
+import dev.rvz.boxvideos.port.in.category.GetCategoryByIdPortIn;
 import dev.rvz.boxvideos.port.out.category.CreateCategoryPortOut;
 import dev.rvz.boxvideos.port.out.category.DeleteCategoryByIdPortOut;
 import dev.rvz.boxvideos.port.out.category.GetAllCategoriesPortOut;
@@ -36,5 +37,10 @@ class ConfigurationPortInCategoryBeansService {
     UpdateCompleteCategoryService updateCompleteCategoryService(GetCategoryByIdPortOut getCategoryByIdPortOut,
                                                                 CreateCategoryPortIn createCategoryPortIn) {
         return new UpdateCompleteCategoryService(getCategoryByIdPortOut, createCategoryPortIn);
+    }
+
+    @Bean
+    UpdatePartialCategoryService updatePartialCategoryService(CreateCategoryPortIn createCategoryPortIn, GetCategoryByIdPortIn getCategoryByIdPortIn) {
+        return new UpdatePartialCategoryService(createCategoryPortIn, getCategoryByIdPortIn);
     }
 }

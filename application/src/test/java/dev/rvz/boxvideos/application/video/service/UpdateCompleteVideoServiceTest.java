@@ -1,5 +1,6 @@
 package dev.rvz.boxvideos.application.video.service;
 
+import dev.rvz.boxvideos.core.domain.category.model.Category;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.video.CreateVideoPortIn;
 import dev.rvz.boxvideos.port.out.video.GetVideoByIdPortOut;
@@ -10,8 +11,10 @@ class UpdateCompleteVideoServiceTest {
 
     @Test
     void update_video_already_exists() {
-        Video video = new Video(1L, "Testes 1", "Descricao 1", "http://localhost");
-        CreateVideoPortIn createVideoPortIn = video1 -> new Video(video1.id(), video1.title(), video1.description(), video1.url());
+        Video video = new Video(1L, "Testes 1", "Descricao 1", "http://localhost",
+                new Category(1L, "LIVRE", "BLUE"));
+        CreateVideoPortIn createVideoPortIn = video1 ->
+                new Video(video1.id(), video1.title(), video1.description(), video1.url(), video1.category());
         GetVideoByIdPortOut getVideoByIdPortOut = new GetVideoByIdPortOut() {
             @Override
             public Video execute(Long id) {
@@ -32,8 +35,14 @@ class UpdateCompleteVideoServiceTest {
 
     @Test
     void update_video_not_exists() {
-        Video video = new Video(1L, "Testes 1", "Descricao 1", "http://localhost");
-        CreateVideoPortIn createVideoPortIn = video1 -> new Video(1L, video1.title(), video1.description(), video1.url());
+        Video video = new Video(
+                1L,
+                "Testes 1",
+                "Descricao 1",
+                "http://localhost",
+                new Category(1L, "LIVRE", "BLUE"));
+        CreateVideoPortIn createVideoPortIn = video1 ->
+                new Video(1L, video1.title(), video1.description(), video1.url(), video1.category());
         GetVideoByIdPortOut getVideoByIdPortOut = new GetVideoByIdPortOut() {
             @Override
             public Video execute(Long id) {
@@ -54,7 +63,8 @@ class UpdateCompleteVideoServiceTest {
 
     @Test
     void exists_video() {
-        CreateVideoPortIn createVideoPortIn = video1 -> new Video(1L, video1.title(), video1.description(), video1.url());
+        CreateVideoPortIn createVideoPortIn = video1 ->
+                new Video(1L, video1.title(), video1.description(), video1.url(), video1.category());
         GetVideoByIdPortOut getVideoByIdPortOut = new GetVideoByIdPortOut() {
             @Override
             public Video execute(Long id) {
@@ -65,8 +75,6 @@ class UpdateCompleteVideoServiceTest {
             public Boolean notExistsVideoById(Long id) {
                 return false;
             }
-
-            ;
         };
 
         UpdateCompleteVideoService updateCompleteVideoService = new UpdateCompleteVideoService(createVideoPortIn, getVideoByIdPortOut);
@@ -77,7 +85,12 @@ class UpdateCompleteVideoServiceTest {
 
     @Test
     void not_exists_video() {
-        CreateVideoPortIn createVideoPortIn = video1 -> new Video(1L, video1.title(), video1.description(), video1.url());
+        CreateVideoPortIn createVideoPortIn = video1 -> new Video(
+                1L,
+                video1.title(),
+                video1.description(),
+                video1.url(),
+                video1.category());
         GetVideoByIdPortOut getVideoByIdPortOut = new GetVideoByIdPortOut() {
             @Override
             public Video execute(Long id) {
@@ -88,8 +101,6 @@ class UpdateCompleteVideoServiceTest {
             public Boolean notExistsVideoById(Long id) {
                 return true;
             }
-
-            ;
         };
 
         UpdateCompleteVideoService updateCompleteVideoService = new UpdateCompleteVideoService(createVideoPortIn, getVideoByIdPortOut);

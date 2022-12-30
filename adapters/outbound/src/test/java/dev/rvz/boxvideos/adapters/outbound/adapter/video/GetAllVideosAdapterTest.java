@@ -1,7 +1,10 @@
 package dev.rvz.boxvideos.adapters.outbound.adapter.video;
 
+import dev.rvz.boxvideos.adapters.commons.entity.CategoryEntity;
 import dev.rvz.boxvideos.adapters.commons.entity.VideoEntity;
+import dev.rvz.boxvideos.adapters.commons.mapper.category.CategoryEntityToCategoryMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.IterableVideoEntityToIterableVideoMapper;
+import dev.rvz.boxvideos.adapters.outbound.repository.CategoryRepository;
 import dev.rvz.boxvideos.adapters.outbound.repository.VideoRepository;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +29,9 @@ import java.util.List;
 @ContextConfiguration(classes = {
         VideoRepository.class,
         IterableVideoEntityToIterableVideoMapper.class,
-        GetAllVideosAdapter.class
+        CategoryEntityToCategoryMapper.class,
+        GetAllVideosAdapter.class,
+        CategoryRepository.class
 })
 @EntityScan("dev.rvz.*")
 @EnableJpaRepositories("dev.rvz.*")
@@ -38,20 +43,35 @@ class GetAllVideosAdapterTest {
     @Autowired
     private IterableVideoEntityToIterableVideoMapper iterableVideoEntityToIterableVideoMapper;
 
+
+    @Autowired
+    private CategoryEntityToCategoryMapper categoryEntityToCategoryMapper;
+
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Autowired
     private GetAllVideosAdapter getAllVideosAdapter;
 
     @Test
     void test_get_all_videos_with_success() {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setTitle("LIVRE");
+        categoryEntity.setColor("BLUE");
+        categoryRepository.save(categoryEntity);
+
         VideoEntity videoEntityOne = new VideoEntity();
         videoEntityOne.setTitle("titulo 1");
         videoEntityOne.setDescription("descricao 1");
         videoEntityOne.setUrl("http://localhost");
+        videoEntityOne.setCategoryEntity(categoryEntity);
 
         VideoEntity videoEntityTwo = new VideoEntity();
         videoEntityTwo.setTitle("titulo 1");
         videoEntityTwo.setDescription("descricao 1");
         videoEntityTwo.setUrl("http://localhost");
+        videoEntityTwo.setCategoryEntity(categoryEntity);
         videoRepository.save(videoEntityOne);
         videoRepository.save(videoEntityTwo);
 
@@ -63,5 +83,7 @@ class GetAllVideosAdapterTest {
         Assertions.assertEquals(2, videos.size());
 
         videoRepository.deleteAll();
+        categoryRepository.deleteAll();
+        ;
     }
 }
