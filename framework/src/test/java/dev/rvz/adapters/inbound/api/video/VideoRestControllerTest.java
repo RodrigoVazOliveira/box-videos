@@ -5,6 +5,7 @@ import dev.rvz.boxvideos.adapters.commons.mapper.video.*;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.CreateVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdateCompleteVideoRequest;
 import dev.rvz.boxvideos.adapters.commons.requests.videos.UpdatePartialRequest;
+import dev.rvz.boxvideos.adapters.commons.responses.categories.CategoryResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.CreateVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetVideoResponse;
@@ -90,7 +91,8 @@ class VideoRestControllerTest {
     void test_create_video_with_success() throws Exception {
         CreateVideoRequest createVideoRequest = new CreateVideoRequest("Video Test1", "Descrição teste", "http://wwww.google.com.br", 1L);
 
-        CreateVideoResponse createVideoResponse = new CreateVideoResponse(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br");
+        CreateVideoResponse createVideoResponse = new CreateVideoResponse(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br",
+                new CategoryResponse(1L, "LIVRE", "WHITE"));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonRequest = objectMapper.writeValueAsString(createVideoRequest);
