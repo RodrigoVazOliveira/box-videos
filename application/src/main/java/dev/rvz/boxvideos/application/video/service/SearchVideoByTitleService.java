@@ -27,7 +27,7 @@ public class SearchVideoByTitleService implements SearchVideoByTitlePortIn {
         return videos;
     }
 
-    private static void validateIsEmpty(String title, Iterable<Video> videos) {
+    private void validateIsEmpty(String title, Iterable<Video> videos) {
         List<Video> videosList = new ArrayList<>();
         videos.forEach(videosList::add);
 
