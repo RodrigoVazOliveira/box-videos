@@ -26,7 +26,7 @@ public class GetVideoByCategoryIdAdapter implements GetVideoByCategoryIdPortOut 
     @Override
     public Iterable<Video> run(Long id) {
         LOGGER.info("run - id {}", id);
-        Iterable<VideoEntity> videos = videoRepository.findByCategoryId(id);
+        Iterable<VideoEntity> videos = videoRepository.findByCategoryEntityId(id);
         LOGGER.info("run - videos {}", videos);
         List<VideoEntity> videoEntities = new ArrayList<>();
         videos.forEach(videoEntities::add);
