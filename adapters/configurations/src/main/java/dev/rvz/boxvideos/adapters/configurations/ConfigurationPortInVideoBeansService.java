@@ -41,4 +41,15 @@ class ConfigurationPortInVideoBeansService {
     DeleteVideoByIdService deleteVideoByIdService(DeleteVideoByIdPortOut deleteVideoByIdPortOut) {
         return new DeleteVideoByIdService(deleteVideoByIdPortOut);
     }
+
+
+    @Bean
+    SearchVideoByTitleService getSearchVideoByTitleService(SearchVideoByTitlePortOut searchVideoByTitlePortOut) {
+        return new SearchVideoByTitleService(searchVideoByTitlePortOut);
+    }
+
+    @Bean
+    GetVideoByCategoryIdService getVideoByCategoryIdService(GetCategoryByIdPortIn getCategoryByIdPortIn, GetVideoByCategoryIdPortOut getVideoByCategoryIdPortOut) {
+        return new GetVideoByCategoryIdService(getCategoryByIdPortIn, getVideoByCategoryIdPortOut);
+    }
 }
