@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.commons;
+package dev.rvz.boxvideos.adapters.commons.authentication;
 
 import dev.rvz.boxvideos.adapters.commons.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;

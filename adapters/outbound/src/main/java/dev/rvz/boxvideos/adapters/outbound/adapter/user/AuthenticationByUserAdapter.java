@@ -1,6 +1,6 @@
 package dev.rvz.boxvideos.adapters.outbound.adapter.user;
 
-import dev.rvz.boxvideos.adapters.commons.UserAuthentication;
+import dev.rvz.boxvideos.adapters.commons.authentication.UserAuthentication;
 import dev.rvz.boxvideos.adapters.commons.entity.UserEntity;
 import dev.rvz.boxvideos.adapters.outbound.repository.UserRepository;
 import dev.rvz.boxvideos.core.domain.user.exception.UserNotFoundException;
