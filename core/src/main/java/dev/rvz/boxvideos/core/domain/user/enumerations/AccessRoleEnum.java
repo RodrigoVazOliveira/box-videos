@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.core.domain.users.enumerations;
+package dev.rvz.boxvideos.core.domain.user.enumerations;
 
 public enum AccessRoleEnum {
     ADMIN(1, "Administrador"), USER(1, "Usuário");
