@@ -1,6 +1,6 @@
 package dev.rvz.boxvideos.adapters.commons.entity;
 
-import dev.rvz.boxvideos.core.domain.users.enumerations.AccessRoleEnum;
+import dev.rvz.boxvideos.core.domain.user.enumerations.AccessRoleEnum;
 import jakarta.persistence.*;
 
 @Entity
