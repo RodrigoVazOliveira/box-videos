@@ -33,13 +33,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class GetCategoryByIdRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private GetCategoryByIdPortIn getCategoryByIdPortIn;
+    GetCategoryByIdPortIn getCategoryByIdPortIn;
 
     @MockBean
-    private CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
+    CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void test_get_by_id_with_sucess_handred_two_ok() throws Exception {

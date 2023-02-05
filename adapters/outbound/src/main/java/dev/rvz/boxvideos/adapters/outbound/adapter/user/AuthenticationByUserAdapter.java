@@ -29,7 +29,7 @@ public class AuthenticationByUserAdapter implements AuthenticationByUserPortOut,
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username == null) {
             LOGGER.error("loadUserByUsername - username is empty");
-            throw new UserNotFoundException("Usuário %s não existe!".formatted(username));
+            throw new UserNotFoundException("Usuário está nulo!");
         }
 
         notExistsUserByEmailOrNick(username);
@@ -46,7 +46,7 @@ public class AuthenticationByUserAdapter implements AuthenticationByUserPortOut,
 
         if (!existsByEmailOrNick) {
             LOGGER.error("existsUserByEmailOrNick - user with email or nick not found!");
-            throw new UserNotFoundException("Usuário com %s não existe!");
+            throw new UserNotFoundException("Usuário com %s não existe!".formatted(username));
         }
     }
 

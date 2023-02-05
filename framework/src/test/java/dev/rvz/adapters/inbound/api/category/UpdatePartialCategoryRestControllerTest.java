@@ -38,16 +38,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class UpdatePartialCategoryRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private UpdatePartialCategoryPortIn updatePartialCategoryPortIn;
+    UpdatePartialCategoryPortIn updatePartialCategoryPortIn;
 
     @MockBean
-    private CreateCategoryRequestWithIdToCategoryMapper createCategoryRequestWithIdToCategoryMapper;
+    CreateCategoryRequestWithIdToCategoryMapper createCategoryRequestWithIdToCategoryMapper;
 
     @MockBean
-    private CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
+    CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void test_update_partial_with_success_200_OK() throws Exception {

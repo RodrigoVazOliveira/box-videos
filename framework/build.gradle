@@ -40,6 +40,9 @@ allprojects {
 }
 
 test {
+    filter {
+        excludeTestsMatching('dev.rvz.boxvideos.adapters.configurations.*')
+    }
     finalizedBy(jacocoTestReport)
 }
 
@@ -50,3 +53,13 @@ tasks.named('check') {
 jacocoTestReport {
     dependsOn test
 }
+
+
+reporting {
+    reports {
+        testCodeCoverageReport(JacocoCoverageReport) {
+            testType = TestSuiteType.UNIT_TEST
+        }
+    }
+}
+

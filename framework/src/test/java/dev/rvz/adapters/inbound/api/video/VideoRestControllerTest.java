@@ -46,46 +46,46 @@ import java.util.Arrays;
 class VideoRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private CreateVideoPortIn createVideoPortIn;
+    CreateVideoPortIn createVideoPortIn;
 
     @MockBean
-    private CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper;
+    CreateVideoRequestToVideoMapper createVideoRequestToVideoMapper;
 
     @MockBean
-    private VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper;
+    VideoToCreateVideoResponseMapper videoToCreateVideoResponseMapper;
 
     @MockBean
-    private GetAllVideosPortIn getAllVideosPortIn;
+    GetAllVideosPortIn getAllVideosPortIn;
 
     @MockBean
-    private IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
+    IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
 
     @MockBean
-    private GetVideoByIdPortIn getVideoByIdPortIn;
+    GetVideoByIdPortIn getVideoByIdPortIn;
 
     @MockBean
-    private VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
+    VideoToGetVideoResponseMapper videoToGetVideoResponseMapper;
 
     @MockBean
-    private UpdateCompleteVideoPortIn updateCompleteVideoPortIn;
+    UpdateCompleteVideoPortIn updateCompleteVideoPortIn;
 
     @MockBean
-    private UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper;
+    UpdateCompleteVideoRequestToVideoMapper updateCompleteVideoRequestToVideoMapper;
 
     @MockBean
-    private VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper;
+    VideoToUpdateCompleteVideoResponseMapper videoToUpdateCompleteVideoResponseMapper;
 
     @MockBean
-    private UpdatePartialVideoPortIn updatePartialVideoPortIn;
+    UpdatePartialVideoPortIn updatePartialVideoPortIn;
 
     @MockBean
-    private UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper;
+    UpdatePartialRequestToVideoMapper updatePartialRequestToVideoMapper;
 
     @MockBean
-    private DeleteVideoByIdPortIn deleteVideoByIdPortIn;
+    DeleteVideoByIdPortIn deleteVideoByIdPortIn;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void test_create_video_with_success() throws Exception {
@@ -98,6 +98,7 @@ class VideoRestControllerTest extends MockSpringSecurity {
         final String responseJson = objectMapper.writeValueAsString(createVideoResponse);
 
         Video video = new Video(1L, "Video Test1", "Descrição teste", "http://wwww.google.com.br", new Category(1L, "", ""));
+        Mockito.when(createVideoRequestToVideoMapper.to(createVideoRequest)).thenReturn(video);
         Mockito.when(createVideoPortIn.execute(Mockito.any())).thenReturn(video);
         Mockito.when(videoToCreateVideoResponseMapper.to(Mockito.any())).thenReturn(createVideoResponse);
         mockMvc.perform(MockMvcRequestBuilders.post("/videos")

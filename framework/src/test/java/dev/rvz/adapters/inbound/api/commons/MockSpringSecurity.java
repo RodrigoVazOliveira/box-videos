@@ -29,19 +29,19 @@ import java.util.List;
 })
 public class MockSpringSecurity {
     @MockBean
-    private AuthenticationByUserAdapter authenticationByUserAdapter;
+    AuthenticationByUserAdapter authenticationByUserAdapter;
 
     @MockBean
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @MockBean
-    private GetJWTGenerateToken getJWTGenerateToken;
+    GetJWTGenerateToken getJWTGenerateToken;
 
     @MockBean
-    private GetAuthoryToToken getAuthoryToToken;
+    GetAuthoryToToken getAuthoryToToken;
 
     @MockBean
-    private TokenIsValid tokenIsValid;
+    TokenIsValid tokenIsValid;
 
     @BeforeEach
     public void setup() {

@@ -31,13 +31,13 @@ import java.util.Arrays;
 class GetAllCategoriesRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private GetAllCategoriesPortIn getAllCategoriesPortIn;
+    GetAllCategoriesPortIn getAllCategoriesPortIn;
 
     @MockBean
-    private AllCategoriesToAllCategoriesResponseMapper allCategoriesToAllCategoriesResponseMapper;
+    AllCategoriesToAllCategoriesResponseMapper allCategoriesToAllCategoriesResponseMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void test_get_all_categories_with_sucess_handred_two_ok() throws Exception {

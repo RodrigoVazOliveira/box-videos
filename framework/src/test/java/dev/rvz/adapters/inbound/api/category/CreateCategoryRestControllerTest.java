@@ -41,16 +41,16 @@ import java.util.List;
 class CreateCategoryRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private CreateCategoryPortIn createCategoryPortIn;
+    CreateCategoryPortIn createCategoryPortIn;
 
     @MockBean
-    private CreateCategoryRequestToCategoryMapper createCategoryRequestToCategoryMapper;
+    CreateCategoryRequestToCategoryMapper createCategoryRequestToCategoryMapper;
 
     @MockBean
-    private CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
+    CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void create_category_with_sucess_handred_two_ok() throws Exception {

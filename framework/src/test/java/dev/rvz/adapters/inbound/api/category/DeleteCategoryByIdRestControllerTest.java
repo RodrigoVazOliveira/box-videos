@@ -31,10 +31,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class DeleteCategoryByIdRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private DeleteCategoryByIdPortIn deleteCategoryByIdPortIn;
+    DeleteCategoryByIdPortIn deleteCategoryByIdPortIn;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
 
     @Test
