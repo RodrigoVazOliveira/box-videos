@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
 import dev.rvz.boxvideos.adapters.inbound.api.category.DeleteCategoryByIdRestController;
 import dev.rvz.boxvideos.core.domain.category.exception.CategoryNotFoundException;
@@ -26,13 +28,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
         DeleteCategoryByIdPortIn.class,
         ExceptionHandlerDefaultRest.class
 })
-public class DeleteCategoryByIdRestControllerTest {
+class DeleteCategoryByIdRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private DeleteCategoryByIdPortIn deleteCategoryByIdPortIn;
+    DeleteCategoryByIdPortIn deleteCategoryByIdPortIn;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
+
 
     @Test
     void not_found_category() throws Exception {
@@ -44,7 +47,8 @@ public class DeleteCategoryByIdRestControllerTest {
         );
 
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/1/"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/1/")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
@@ -59,7 +63,8 @@ public class DeleteCategoryByIdRestControllerTest {
         String response = objectMapper.writeValueAsString(message);
         Mockito.when(deleteCategoryByIdPortIn.deleteById(Mockito.any())).thenReturn(message);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/1/"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/1/")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(

@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.commons.mapper.category.CategoryToCategoryResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.category.CreateCategoryRequestWithIdToCategoryMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.categories.CreateCategoryRequest;
@@ -36,8 +38,7 @@ import java.util.List;
         UpdateCompleteCategoryRestController.class,
         ExceptionHandlerDefaultRest.class
 })
-class UpdateCompleteCategoryRestControllerTest {
-
+class UpdateCompleteCategoryRestControllerTest extends MockSpringSecurity {
 
     @MockBean
     UpdateCompleteCategoryPortIn updateCompleteCategoryPortIn;
@@ -48,80 +49,79 @@ class UpdateCompleteCategoryRestControllerTest {
     @MockBean
     CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
 
-
     @Autowired
     MockMvc mockMvc;
 
     @Test
     void error_validation_data_category_exists() throws Exception {
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FI", "RED");
-        Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
-        ObjectMapper objectMapper = new ObjectMapper();
-        String request = objectMapper.writeValueAsString(createCategoryRequest);
+        final CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FI", "RED");
+        final Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String request = objectMapper.writeValueAsString(createCategoryRequest);
 
-        List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
+        final List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
         infoValidationInputs.add(new InfoValidationInput("title", "O campo title deve ter no mínimo 3 de caracteres."));
 
-        ResponseInputException responseInputException = new ResponseInputException(infoValidationInputs);
+        final ResponseInputException responseInputException = new ResponseInputException(infoValidationInputs);
 
-        String response = objectMapper.writeValueAsString(responseInputException);
+        final String response = objectMapper.writeValueAsString(responseInputException);
 
         Mockito.when(createCategoryRequestWithIdToCategoryMapper.to(Mockito.any(), Mockito.any())).thenReturn(category);
         Mockito.when(updateCompleteCategoryPortIn.existsCategoryById(Mockito.any())).thenReturn(true);
         Mockito.when(updateCompleteCategoryPortIn.update(Mockito.any(), Mockito.any())).thenThrow(
                 new ValidateInputException(infoValidationInputs)
         );
+
         mockMvc.perform(MockMvcRequestBuilders.put("/categories/1/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue())
                         .content(request))
                 .andExpect(
                         MockMvcResultMatchers.status().isBadRequest()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(response)
                 );
-
-
     }
 
     @Test
     void error_validation_data_category_not_exists() throws Exception {
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FI", "RED");
-        Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
-        ObjectMapper objectMapper = new ObjectMapper();
-        String request = objectMapper.writeValueAsString(createCategoryRequest);
+        final CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FI", "RED");
+        final Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String request = objectMapper.writeValueAsString(createCategoryRequest);
 
-        List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
+        final List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
         infoValidationInputs.add(new InfoValidationInput("title", "O campo title deve ter no mínimo 3 de caracteres."));
 
-        ResponseInputException responseInputException = new ResponseInputException(infoValidationInputs);
+        final ResponseInputException responseInputException = new ResponseInputException(infoValidationInputs);
 
-        String response = objectMapper.writeValueAsString(responseInputException);
+        final String response = objectMapper.writeValueAsString(responseInputException);
 
         Mockito.when(createCategoryRequestWithIdToCategoryMapper.to(Mockito.any(), Mockito.any())).thenReturn(category);
         Mockito.when(updateCompleteCategoryPortIn.existsCategoryById(Mockito.any())).thenReturn(false);
         Mockito.when(updateCompleteCategoryPortIn.update(Mockito.any(), Mockito.any())).thenThrow(
                 new ValidateInputException(infoValidationInputs)
         );
+
         mockMvc.perform(MockMvcRequestBuilders.put("/categories/1/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue())
                         .content(request))
                 .andExpect(
                         MockMvcResultMatchers.status().isBadRequest()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(response)
                 );
-
-
     }
 
     @Test
     void create_category_not_exists() throws Exception {
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FILME", "RED");
-        Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
-        CategoryResponse categoryResponse = new CategoryResponse(category.id(), category.title(), category.color());
-        ObjectMapper objectMapper = new ObjectMapper();
-        String request = objectMapper.writeValueAsString(createCategoryRequest);
-        String response = objectMapper.writeValueAsString(categoryResponse);
+        final CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FILME", "RED");
+        final Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
+        final CategoryResponse categoryResponse = new CategoryResponse(category.id(), category.title(), category.color());
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String request = objectMapper.writeValueAsString(createCategoryRequest);
+        final String response = objectMapper.writeValueAsString(categoryResponse);
 
         Mockito.when(createCategoryRequestWithIdToCategoryMapper.to(Mockito.any(), Mockito.any())).thenReturn(category);
         Mockito.when(updateCompleteCategoryPortIn.existsCategoryById(Mockito.any())).thenReturn(false);
@@ -130,6 +130,7 @@ class UpdateCompleteCategoryRestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.put("/categories/1/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue())
                         .content(request))
                 .andExpect(
                         MockMvcResultMatchers.status().isCreated()
@@ -140,12 +141,12 @@ class UpdateCompleteCategoryRestControllerTest {
 
     @Test
     void update_category_exists() throws Exception {
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FILME", "RED");
-        Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
-        CategoryResponse categoryResponse = new CategoryResponse(category.id(), category.title(), category.color());
-        ObjectMapper objectMapper = new ObjectMapper();
-        String request = objectMapper.writeValueAsString(createCategoryRequest);
-        String response = objectMapper.writeValueAsString(categoryResponse);
+        final CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("FILME", "RED");
+        final Category category = new Category(1L, createCategoryRequest.title(), createCategoryRequest.color());
+        final CategoryResponse categoryResponse = new CategoryResponse(category.id(), category.title(), category.color());
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String request = objectMapper.writeValueAsString(createCategoryRequest);
+        final String response = objectMapper.writeValueAsString(categoryResponse);
 
         Mockito.when(createCategoryRequestWithIdToCategoryMapper.to(Mockito.any(), Mockito.any())).thenReturn(category);
         Mockito.when(updateCompleteCategoryPortIn.existsCategoryById(Mockito.any())).thenReturn(true);
@@ -154,13 +155,12 @@ class UpdateCompleteCategoryRestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.put("/categories/1/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue())
                         .content(request))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
                         MockMvcResultMatchers.content().json(response)
                 );
-
-
     }
 }
