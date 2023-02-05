@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.commons.mapper.category.AllCategoriesToAllCategoriesResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.categories.CategoryResponse;
 import dev.rvz.boxvideos.adapters.inbound.api.category.GetAllCategoriesRestController;
@@ -26,35 +28,37 @@ import java.util.Arrays;
         AllCategoriesToAllCategoriesResponseMapper.class,
         GetAllCategoriesRestController.class
 })
-class GetAllCategoriesRestControllerTest {
+class GetAllCategoriesRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private GetAllCategoriesPortIn getAllCategoriesPortIn;
+    GetAllCategoriesPortIn getAllCategoriesPortIn;
 
     @MockBean
-    private AllCategoriesToAllCategoriesResponseMapper allCategoriesToAllCategoriesResponseMapper;
+    AllCategoriesToAllCategoriesResponseMapper allCategoriesToAllCategoriesResponseMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void test_get_all_categories_with_sucess_handred_two_ok() throws Exception {
-        Iterable<Category> categories = Arrays.asList(
+        final Iterable<Category> categories = Arrays.asList(
                 new Category(1L, "LIVRE", "BLUE"),
                 new Category(2L, "FILME", "GREEN")
         );
 
-        Iterable<CategoryResponse> categoryResponses = Arrays.asList(
+        final Iterable<CategoryResponse> categoryResponses = Arrays.asList(
                 new CategoryResponse(1L, "LIVRE", "BLUE"),
                 new CategoryResponse(2L, "FILME", "GREEN")
         );
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(categoryResponses);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String response = objectMapper.writeValueAsString(categoryResponses);
 
         Mockito.when(getAllCategoriesPortIn.execute()).thenReturn(categories);
         Mockito.when(allCategoriesToAllCategoriesResponseMapper.to(Mockito.any())).thenReturn(categoryResponses);
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/"))
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(

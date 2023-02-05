@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.commons.mapper.category.CategoryToCategoryResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.categories.CategoryResponse;
 import dev.rvz.boxvideos.adapters.exceptions.ExceptionHandlerDefaultRest;
@@ -28,29 +30,30 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
         CategoryToCategoryResponseMapper.class,
         GetCategoryByIdRestController.class
 })
-class GetCategoryByIdRestControllerTest {
+class GetCategoryByIdRestControllerTest extends MockSpringSecurity {
 
     @MockBean
-    private GetCategoryByIdPortIn getCategoryByIdPortIn;
+    GetCategoryByIdPortIn getCategoryByIdPortIn;
 
     @MockBean
-    private CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
+    CategoryToCategoryResponseMapper categoryToCategoryResponseMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @Test
     void test_get_by_id_with_sucess_handred_two_ok() throws Exception {
-        Category category = new Category(1L, "LIVRE", "BLUE");
-        CategoryResponse categoryResponse = new CategoryResponse(category.id(), category.title(), category.color());
+        final Category category = new Category(1L, "LIVRE", "BLUE");
+        final CategoryResponse categoryResponse = new CategoryResponse(category.id(), category.title(), category.color());
 
         Mockito.when(getCategoryByIdPortIn.getCategoryById(Mockito.any())).thenReturn(category);
         Mockito.when(categoryToCategoryResponseMapper.to(Mockito.any())).thenReturn(categoryResponse);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(categoryResponse);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String response = objectMapper.writeValueAsString(categoryResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
@@ -63,12 +66,13 @@ class GetCategoryByIdRestControllerTest {
         Mockito.when(getCategoryByIdPortIn.getCategoryById(Mockito.any())).thenThrow(
                 new CategoryNotFoundException("categoria com id 1 não existe.")
         );
-        ResponseException responseException = new ResponseException(404, "categoria com id 1 não existe.");
+        final ResponseException responseException = new ResponseException(404, "categoria com id 1 não existe.");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(responseException);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String response = objectMapper.writeValueAsString(responseException);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
