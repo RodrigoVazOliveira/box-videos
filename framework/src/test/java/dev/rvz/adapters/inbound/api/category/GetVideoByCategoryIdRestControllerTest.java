@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.categories.CategoryResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
@@ -34,14 +36,13 @@ import java.util.List;
         ExceptionHandlerDefaultRest.class
 
 })
-class GetVideoByCategoryIdRestControllerTest {
+class GetVideoByCategoryIdRestControllerTest extends MockSpringSecurity {
 
     @MockBean
     IterableVideoToIterableGetAllVideoResponseMapper iterableVideoToIterableGetAllVideoResponseMapper;
 
     @MockBean
     GetVideoByCategoryIdPortIn getVideoByCategoryIdPortIn;
-
 
     @Autowired
     MockMvc mockMvc;
@@ -77,7 +78,8 @@ class GetVideoByCategoryIdRestControllerTest {
         Mockito.when(getVideoByCategoryIdPortIn.run(Mockito.any())).thenReturn(videos);
         Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any()))
                 .thenReturn(getAllVideoResponses);
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/videos"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/videos")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
@@ -93,7 +95,8 @@ class GetVideoByCategoryIdRestControllerTest {
 
         Mockito.when(getVideoByCategoryIdPortIn.run(Mockito.any()))
                 .thenThrow(new CategoryNotFoundException("categoria com id 1 não existe."));
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/videos"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/1/videos")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(

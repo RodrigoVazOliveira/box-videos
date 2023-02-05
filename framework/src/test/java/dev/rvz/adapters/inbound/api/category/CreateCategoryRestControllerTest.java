@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.commons.mapper.category.CategoryToCategoryResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.mapper.category.CreateCategoryRequestToCategoryMapper;
 import dev.rvz.boxvideos.adapters.commons.requests.categories.CreateCategoryRequest;
@@ -36,7 +38,7 @@ import java.util.List;
         ExceptionHandlerDefaultRest.class,
         CreateCategoryRestController.class
 })
-class CreateCategoryRestControllerTest {
+class CreateCategoryRestControllerTest extends MockSpringSecurity {
 
     @MockBean
     private CreateCategoryPortIn createCategoryPortIn;
@@ -52,14 +54,14 @@ class CreateCategoryRestControllerTest {
 
     @Test
     void create_category_with_sucess_handred_two_ok() throws Exception {
-        CreateCategoryRequest categoryRequest = new CreateCategoryRequest("SERIE", "RED");
-        Category category = new Category(null, "SERIE", "RED");
-        Category newCategory = new Category(1L, "SERIE", "RED");
-        CategoryResponse categoryResponse = new CategoryResponse(1L, "SERIE", "RED");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final CreateCategoryRequest categoryRequest = new CreateCategoryRequest("SERIE", "RED");
+        final Category category = new Category(null, "SERIE", "RED");
+        final Category newCategory = new Category(1L, "SERIE", "RED");
+        final CategoryResponse categoryResponse = new CategoryResponse(1L, "SERIE", "RED");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String request = objectMapper.writeValueAsString(categoryRequest);
-        String response = objectMapper.writeValueAsString(categoryResponse);
+        final String request = objectMapper.writeValueAsString(categoryRequest);
+        final String response = objectMapper.writeValueAsString(categoryResponse);
 
         Mockito.when(createCategoryRequestToCategoryMapper.to(Mockito.any())).thenReturn(category);
         Mockito.when(createCategoryPortIn.create(Mockito.any())).thenReturn(newCategory);
@@ -67,6 +69,7 @@ class CreateCategoryRestControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/categories/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue())
                         .content(request))
                 .andExpect(
                         MockMvcResultMatchers.status().isCreated()
@@ -77,29 +80,28 @@ class CreateCategoryRestControllerTest {
                 );
     }
 
+
     @Test
     void create_category_hudred_four_title_with_minor_three_character() throws Exception {
-        CreateCategoryRequest categoryRequest = new CreateCategoryRequest("SE", "RED");
-        Category category = new Category(null, "SERIE", "RED");
+        final CreateCategoryRequest categoryRequest = new CreateCategoryRequest("SE", "RED");
+        final Category category = new Category(null, "SERIE", "RED");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String request = objectMapper.writeValueAsString(categoryRequest);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String request = objectMapper.writeValueAsString(categoryRequest);
 
-
-        List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
+        final List<InfoValidationInput> infoValidationInputs = new ArrayList<>();
         infoValidationInputs.add(new InfoValidationInput("title", "O cmapo title deve ter no mínimo 3 de caracteres."));
 
         Mockito.when(createCategoryRequestToCategoryMapper.to(Mockito.any())).thenReturn(category);
-        Mockito.when(createCategoryPortIn.create(Mockito.any())).thenThrow(
-                new ValidateInputException(infoValidationInputs)
-        );
+        Mockito.when(createCategoryPortIn.create(Mockito.any())).thenThrow(new ValidateInputException(infoValidationInputs));
 
-        ResponseInputException responseInputException = new ResponseInputException(infoValidationInputs);
+        final ResponseInputException responseInputException = new ResponseInputException(infoValidationInputs);
 
-        String response = objectMapper.writeValueAsString(responseInputException);
+        final String response = objectMapper.writeValueAsString(responseInputException);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/categories/")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue())
                         .content(request))
                 .andExpect(
                         MockMvcResultMatchers.status().isBadRequest()
@@ -107,6 +109,4 @@ class CreateCategoryRestControllerTest {
                         MockMvcResultMatchers.content().json(response)
                 );
     }
-
-
 }
