@@ -24,10 +24,10 @@ public class TokenIsValid {
             LOGGER.info("decoding token {}", token);
             DecodedJWT decodeToken = JWT.decode(token);
             Algorithm.HMAC512(secretKey).verify(decodeToken);
-            LOGGER.info("token is valid",);
+            LOGGER.info("token is valid");
             return true;
         } catch (JWTDecodeException | SignatureVerificationException ex) {
-            LOGGER.error("error in decoding or verify token. error: {}", ex.getMessage());
+            LOGGER.error("error in decoding or token not valid. error: {}", ex.getMessage());
             return false;
         }
     }
