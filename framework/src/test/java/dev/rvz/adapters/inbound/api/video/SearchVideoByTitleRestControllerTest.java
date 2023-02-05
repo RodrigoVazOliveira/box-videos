@@ -1,6 +1,8 @@
 package dev.rvz.adapters.inbound.api.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.rvz.adapters.inbound.api.TokenEnum;
+import dev.rvz.adapters.inbound.api.commons.MockSpringSecurity;
 import dev.rvz.boxvideos.adapters.commons.mapper.video.IterableVideoToIterableGetAllVideoResponseMapper;
 import dev.rvz.boxvideos.adapters.commons.responses.categories.CategoryResponse;
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
@@ -32,7 +34,7 @@ import java.util.List;
         SearchVideoByTitleRestController.class,
         ExceptionHandlerDefaultRest.class
 })
-class SearchVideoByTitleRestControllerTest {
+class SearchVideoByTitleRestControllerTest extends MockSpringSecurity {
 
     @MockBean
     SearchVideoByTitlePortIn searchVideoByTitlePortIn;
@@ -45,23 +47,24 @@ class SearchVideoByTitleRestControllerTest {
 
     @Test
     void test_search_video_by_title_with_success() throws Exception {
-        Category category = new Category(1L, "LIVRE", "WHITE");
-        Video video = new Video(1L, "Titulo", "Desccrição", "http://localhost", category);
-        Iterable<Video> videosIterable = List.of(video);
+        final Category category = new Category(1L, "LIVRE", "WHITE");
+        final Video video = new Video(1L, "Titulo", "Desccrição", "http://localhost", category);
+        final Iterable<Video> videosIterable = List.of(video);
 
-        GetAllVideoResponse getAllVideoResponse = new GetAllVideoResponse(video.id(), video.title(), video.description(), video.url(),
+        final GetAllVideoResponse getAllVideoResponse = new GetAllVideoResponse(video.id(), video.title(), video.description(), video.url(),
                 new CategoryResponse(category.id(), category.title(), category.color()));
-        Iterable<GetAllVideoResponse> videoResponses = List.of(getAllVideoResponse);
+        final Iterable<GetAllVideoResponse> videoResponses = List.of(getAllVideoResponse);
 
 
         Mockito.when(searchVideoByTitlePortIn.run(Mockito.anyString())).thenReturn(videosIterable);
         Mockito.when(iterableVideoToIterableGetAllVideoResponseMapper.to(Mockito.any()))
                 .thenReturn(videoResponses);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(videoResponses);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String response = objectMapper.writeValueAsString(videoResponses);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/videos/?search=Titulo"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/?search=Titulo")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isOk()
                 ).andExpect(
@@ -71,15 +74,16 @@ class SearchVideoByTitleRestControllerTest {
 
     @Test
     void test_search_video_by_title_with_not_found() throws Exception {
-        VideoNotFoundException videoNotFoundException = new VideoNotFoundException("Não foi enctrado nenhum video com o título Titulo");
-        ResponseException responseException = new ResponseException(404, videoNotFoundException.getMessage());
+        final VideoNotFoundException videoNotFoundException = new VideoNotFoundException("Não foi enctrado nenhum video com o título Titulo");
+        final ResponseException responseException = new ResponseException(404, videoNotFoundException.getMessage());
 
         Mockito.when(searchVideoByTitlePortIn.run(Mockito.anyString()))
                 .thenThrow(videoNotFoundException);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String response = objectMapper.writeValueAsString(responseException);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String response = objectMapper.writeValueAsString(responseException);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/videos/?search=Titulo"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/videos/?search=Titulo")
+                        .header(TokenEnum.AUTORIZATION.getName(), TokenEnum.AUTORIZATION.getValue()))
                 .andExpect(
                         MockMvcResultMatchers.status().isNotFound()
                 ).andExpect(
