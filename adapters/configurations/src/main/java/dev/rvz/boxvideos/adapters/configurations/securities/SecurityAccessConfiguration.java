@@ -1,4 +1,4 @@
-package dev.rvz.boxvideos.adapters.configurations;
+package dev.rvz.boxvideos.adapters.configurations.securities;
 
 import dev.rvz.boxvideos.adapters.outbound.adapter.user.AuthenticationByUserAdapter;
 import org.springframework.context.annotation.Bean;
