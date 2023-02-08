@@ -27,3 +27,12 @@ $ createuser box_videos -D -P
 $ createdb box_videos -O box_videos
 ```
 
+## Endpoints disponíveis:
+
+	Uma descrição dos endpoints da API
+	
+	
+	
+| HTTP METHOD | PATH | DESCRIÇÃO | POSSÍVEIS ERROS |
+|-------------|------|-----------|-----------------|
+| POST | /categories | Criar uma nova categoria | 400 - categoria já existente|
