@@ -19,11 +19,11 @@ public class DeleteCategoryByIdRestController {
 
     @DeleteMapping("/{id}/")
     @ResponseStatus(HttpStatus.OK)
-    Message deleteById(@PathVariable Long id) {
+    Message deleteById(@PathVariable("id") Long id) {
         LOGGER.info("deleteById - id {}", id);
         Message message = deleteCategoryByIdPortIn.deleteById(id);
         LOGGER.info("deleteById - message {}", message);
-        
+
         return message;
     }
 }

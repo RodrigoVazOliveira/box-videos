@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -42,27 +43,25 @@ public class SecurityAccessConfiguration {
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         http
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.DELETE, "/categories/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/videos/**").hasAuthority("ADMIN")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/videos/**").hasAuthority("ADMIN")
 
-                .requestMatchers(HttpMethod.POST, "/videos/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.PUT, "/videos/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.PATCH, "/videos/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/videos/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.PATCH, "/categories/**").hasAnyAuthority("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/categories/**").hasAnyAuthority("ADMIN", "USER")
-                .anyRequest()
-                .authenticated()
-                .and()
+                        .requestMatchers(HttpMethod.POST, "/videos/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/videos/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PATCH, "/videos/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/videos/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/categories/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/categories/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PATCH, "/categories/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/categories/**").hasAnyAuthority("ADMIN", "USER")
+                        .anyRequest()
+                        .authenticated())
                 .authenticationManager(authenticationManager)
                 .addFilterBefore(new UserExistsToVerifyAuthenticationFilter(authenticationManager, getJWTGenerateToken), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new AuthenticationFilter(tokenIsValid, getAuthoryToToken), UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -71,4 +70,6 @@ public class SecurityAccessConfiguration {
     Pbkdf2PasswordEncoder getPbkdf2PasswordEncoder() {
         return Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     }
+
+
 }

@@ -25,7 +25,7 @@ public class GetVideoByIdRestController extends VideoRestController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<GetVideoResponse> getVideoById(@PathVariable Long id) {
+    ResponseEntity<GetVideoResponse> getVideoById(@PathVariable("id") Long id) {
         LOGGER.info("getVideoById - id {}", id);
         Video video = getVideoByIdPortIn.execute(id);
 

@@ -30,7 +30,7 @@ public class UpdatePartialCategoryRestController {
     @PatchMapping("/{id}/")
     @ResponseStatus(HttpStatus.OK)
     CategoryResponse updatePartial(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
         LOGGER.info("updatePartial - id {}, createCategoryRequest {}", id, createCategoryRequest);
