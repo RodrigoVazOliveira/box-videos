@@ -23,7 +23,7 @@ public class GetCategoryByIdRestController {
 
     @GetMapping("/{id}/")
     @ResponseStatus(HttpStatus.OK)
-    CategoryResponse getCategoryById(@PathVariable Long id) {
+    CategoryResponse getCategoryById(@PathVariable("id") Long id) {
         LOGGER.info("getCategoryById - id {}", id);
         Category category = getCategoryByIdPortIn.getCategoryById(id);
         LOGGER.info("getCategoryById - category {}", category);

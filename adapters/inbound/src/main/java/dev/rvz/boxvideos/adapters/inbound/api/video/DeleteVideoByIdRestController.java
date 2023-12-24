@@ -20,7 +20,7 @@ public class DeleteVideoByIdRestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteVideoById(@PathVariable Long id) {
+    void deleteVideoById(@PathVariable("id") Long id) {
         LOGGER.info("deleteVideoById - id {}", id);
         Category category = new Category(null, null, null);
         Video video = new Video(id, "", "", "", category);

@@ -23,7 +23,7 @@ public class GetVideoByCategoryIdRestController {
 
     @GetMapping("/{id}/videos")
     @ResponseStatus(HttpStatus.OK)
-    Iterable<GetAllVideoResponse> getVideoByCategoryId(@PathVariable Long id) {
+    Iterable<GetAllVideoResponse> getVideoByCategoryId(@PathVariable("id") Long id) {
         LOGGER.info("getVideoByCategoryId - id {}", id);
         Iterable<Video> videos = getVideoByCategoryIdPortIn.run(id);
 

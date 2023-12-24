@@ -32,7 +32,7 @@ public class UpdateCompleteCategoryRestController {
     @PutMapping("/{id}/")
     ResponseEntity<CategoryResponse> update(
             @RequestBody CreateCategoryRequest createCategoryRequest,
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             HttpServletRequest httpServletRequest
     ) throws URISyntaxException {
         LOGGER.info("update - id {}, createCategoryRequest {}", id, createCategoryRequest);

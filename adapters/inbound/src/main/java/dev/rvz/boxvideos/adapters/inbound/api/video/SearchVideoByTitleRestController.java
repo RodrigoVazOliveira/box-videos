@@ -4,14 +4,10 @@ import dev.rvz.boxvideos.adapters.commons.mapper.video.IterableVideoToIterableGe
 import dev.rvz.boxvideos.adapters.commons.responses.videos.GetAllVideoResponse;
 import dev.rvz.boxvideos.core.domain.video.model.Video;
 import dev.rvz.boxvideos.port.in.video.SearchVideoByTitlePortIn;
-import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/videos")
@@ -27,7 +23,7 @@ public class SearchVideoByTitleRestController {
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    Iterable<GetAllVideoResponse> getVideoByTitle(@PathParam("search") String search) {
+    Iterable<GetAllVideoResponse> getVideoByTitle(@RequestParam("search") String search) {
         LOGGER.info("getVideoByTitle - title {}", search);
         Iterable<Video> videos = searchVideoByTitlePortIn.run(search);
 

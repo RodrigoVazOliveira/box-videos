@@ -26,7 +26,7 @@ public class UpdatePartialVideoRestController extends VideoRestController {
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<?> updatePartial(@PathVariable Long id, @RequestBody UpdatePartialRequest updatePartialRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
+    ResponseEntity<?> updatePartial(@PathVariable("id") Long id, @RequestBody UpdatePartialRequest updatePartialRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
         LOGGER.info("updatePartial - id {}, updatePartialRequest {}", id, updatePartialRequest);
         Video video = updatePartialRequestToVideoMapper.to(updatePartialRequest, id);
         updatePartialVideoPortIn.updateVideoAlreadyExists(video);

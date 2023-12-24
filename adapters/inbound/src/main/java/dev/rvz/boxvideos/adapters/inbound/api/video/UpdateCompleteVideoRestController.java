@@ -30,7 +30,7 @@ public class UpdateCompleteVideoRestController extends VideoRestController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<UpdateCompleteVideoResponse> updatecompleteVideo(@PathVariable Long id, @RequestBody UpdateCompleteVideoRequest updateCompleteVideoRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
+    ResponseEntity<UpdateCompleteVideoResponse> updatecompleteVideo(@PathVariable("id") Long id, @RequestBody UpdateCompleteVideoRequest updateCompleteVideoRequest, HttpServletRequest httpServletRequest) throws URISyntaxException {
         LOGGER.info("updatecompleteVideo - id {}, updateCompleteVideoRequest {}", id, updateCompleteVideoRequest);
         Video video = updateCompleteVideoRequestToVideoMapper.to(updateCompleteVideoRequest, id);
         Boolean videoExists = updateCompleteVideoPortIn.videoExists(id);
@@ -44,7 +44,7 @@ public class UpdateCompleteVideoRestController extends VideoRestController {
         }
 
         Video newVideo = updateCompleteVideoPortIn.execute(video, false);
-        
+
         return ResponseEntity
                 .created(uri)
                 .body(videoToUpdateCompleteVideoResponseMapper.to(newVideo));
